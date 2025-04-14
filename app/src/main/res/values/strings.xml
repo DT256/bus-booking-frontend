@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">BusBookingApp</string>
+    <!-- Tiêu đề và thao tác -->
+    <string name="back">Quay lại</string>
+    <string name="ticket_details">Chi tiết vé</string>
+    <string name="save_ticket">Lưu vé</string>
+    <string name="cancel_ticket">Hủy vé</string>
+
+    <!-- Trạng thái vé -->
+    <string name="confirmed">Đã xác nhận</string>
+
+    <!-- Thông tin công ty xe -->
+    <string name="bus_company_logo">Logo công ty xe buýt</string>
+    <string name="company_name">Công ty Vận tải XYZ</string>
+    <string name="bus_number">Tuyến: 08</string>
+
+    <!-- Thông tin tuyến đường -->
+    <string name="departure">Điểm khởi hành</string>
+    <string name="departure_place">Bến xe miền Đông</string>
+    <string name="departure_time">08:30, 15/04/2025</string>
+    <string name="arrival">Điểm đến</string>
+    <string name="arrival_place">Bến xe Đà Lạt</string>
+    <string name="arrival_time">15:00, 15/04/2025</string>
+    <string name="direction_arrow">Mũi tên chỉ hướng</string>
+
+    <!-- Thông tin hành khách -->
+    <string name="passenger_name">Tên hành khách</string>
+    <string name="passenger_name_value">Nguyễn Văn A</string>
+    <string name="seat_number">Số ghế</string>
+    <string name="seat_number_value">A12</string>
+
+    <!-- Thông tin đặt vé -->
+    <string name="booking_id">Mã đặt vé</string>
+    <string name="booking_id_value">BK-2025041501</string>
+    <string name="price">Giá vé</string>
+    <string name="price_value">370.000 VNĐ</string>
+
+    <!-- Thông tin mã QR -->
+    <string name="scan_to_board">Quét mã để lên xe</string>
+    <string name="qr_code">Mã QR vé xe buýt</string>
+    <string name="ticket_id_value">TK-XYZ12345</string>
 </resources>
