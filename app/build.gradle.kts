@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = "com.group8.busbookingapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.group8.busbookingapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
