@@ -40,7 +40,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         holder.tvArrivalTime.setText(trip.getArrivalTime().substring(11, 16));
         holder.tvPickupLocation.setText(trip.getStartPointCity());
         holder.tvDropoffLocation.setText(trip.getEndPointCity());
-        holder.tvDuration.setText(String.valueOf(trip.getDuration()));
+        holder.tvDuration.setText(String.valueOf(trip.getDuration()) + " Km");
         holder.tvPrice.setText(String.format("%,d VNĐ", trip.getPrice()));
         holder.tvAvailableSeats.setText("Còn " + trip.getAvailableSeats() + " chỗ");
 

@@ -29,6 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -46,5 +49,8 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("org.java-websocket:Java-WebSocket:1.5.2")
+    implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.4")
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
 
 }

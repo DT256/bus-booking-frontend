@@ -103,6 +103,9 @@ public class SearchActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
                         intent.putExtra("trip_list", new ArrayList<>(trips));
+                        intent.putExtra("departure", departure);
+                        intent.putExtra("arrival", arrival);
+                        intent.putExtra("dateInput", dateInput);
                         startActivity(intent);
                     } else {
                         Toast.makeText(SearchActivity.this, "Không tìm thấy chuyến xe!", Toast.LENGTH_SHORT).show();
