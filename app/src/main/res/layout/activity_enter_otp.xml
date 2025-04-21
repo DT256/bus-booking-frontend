@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <!-- Header với nút quay lại -->
+    <LinearLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Quay lại"
+            android:padding="8dp"
+            android:tint="#3F51B5" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận OTP"
+            android:textColor="#3F51B5"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginEnd="40dp" />
+    </LinearLayout>
+
+    <!-- Logo và tiêu đề ứng dụng -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/layoutHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/bus_logo"
+        android:contentDescription="Logo ứng dụng" />
+
+    <TextView
+        android:id="@+id/tvAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivLogo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="BUS TICKET"
+        android:textColor="#3F51B5"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Card chứa form nhập OTP -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppTitle"
+        android:layout_marginTop="24dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xác thực tài khoản"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tvOtpMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vui lòng nhập mã OTP 6 chữ số đã được gửi đến email của bạn"
+                android:textColor="#757575"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Input OTP - 6 ô nhập liệu -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="24dp">
+
+                <!-- OTP Box 1 -->
+                <EditText
+                    android:id="@+id/etOtp1"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no" />
+
+                <!-- OTP Box 2 -->
+                <EditText
+                    android:id="@+id/etOtp2"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no" />
+
+                <!-- OTP Box 3 -->
+                <EditText
+                    android:id="@+id/etOtp3"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no" />
+
+                <!-- OTP Box 4 -->
+                <EditText
+                    android:id="@+id/etOtp4"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no" />
+
+                <!-- OTP Box 5 -->
+                <EditText
+                    android:id="@+id/etOtp5"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no" />
+
+                <!-- OTP Box 6 -->
+                <EditText
+                    android:id="@+id/etOtp6"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/otp_box_background"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="1"
+                    android:textColor="#212121"
+                    android:textSize="20sp"
+                    android:importantForAutofill="no" />
+            </LinearLayout>
+
+            <!-- Đếm ngược thời gian -->
+            <TextView
+                android:id="@+id/tvTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Mã OTP sẽ hết hạn trong: 02:00"
+                android:textColor="#757575"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Nút Xác nhận -->
+            <Button
+                android:id="@+id/btnVerify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#3F51B5"
+                android:padding="14dp"
+                android:text="XÁC NHẬN"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Gửi lại OTP -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Không nhận được mã? "
+                    android:textColor="#757575" />
+
+                <TextView
+                    android:id="@+id/tvResendOtp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gửi lại"
+                    android:textColor="#FF5722"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
