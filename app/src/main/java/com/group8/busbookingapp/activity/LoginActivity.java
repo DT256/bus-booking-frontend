@@ -12,12 +12,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
+
+import java.lang.reflect.Type;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu", Toast.LENGTH_SHORT).show();
+            } else if (password.length()<6) {
+                Toast.makeText(this, "Mật khẩu yêu cầu ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
             } else {
                 loginUser(email, password);
             }
@@ -78,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<LoginResponse> apiResponse = response.body();
                     LoginResponse loginData = apiResponse.getData();
-                    if(loginData != null) {
+                    if (loginData != null) {
                         String jwt = loginData.getJwt();
                         String message = loginData.getMessage();
 
@@ -88,16 +94,29 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         sharedPreferences.edit().putString("token", jwt).apply();
 
-                        //Chuyển qua MainActivity
+                        // Chuyển qua SearchActivity
                         Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
                         startActivity(intent);
                         finish();
-                    }else{
+                    } else {
                         Toast.makeText(LoginActivity.this, "Dữ liệu trả về từ server rỗng", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                    try {
+                        // Parse lỗi từ response.errorBody()
+                        String errorJson = response.errorBody().string();
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<ApiResponse<Object>>(){}.getType();
+                        ApiResponse<?> errorResponse = gson.fromJson(errorJson, type);
+
+                        String errorMessage = errorResponse.getMessage();
+                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
