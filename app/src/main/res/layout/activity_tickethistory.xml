@@ -14,7 +14,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#0D47A1"
         app:layout_constraintTop_toTopOf="parent">
-
+z
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
@@ -23,10 +23,10 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Quay lại"
             app:srcCompat="@drawable/ic_back"
-            android:tint="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tvTitle"
