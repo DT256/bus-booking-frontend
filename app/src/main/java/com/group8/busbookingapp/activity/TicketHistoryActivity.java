@@ -10,11 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.adapter.TicketHistoryAdapter;
+import com.group8.busbookingapp.databinding.ActivityTickethistoryBinding;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.model.Booking;
 import com.group8.busbookingapp.network.ApiClient;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TicketHistoryActivity extends AppCompatActivity {
+    private final String TAG = "History Activity";
+    private ActivityTickethistoryBinding binding;
     private RecyclerView recyclerViewTickets;
     private LinearLayout emptyStateLayout;
     private ProgressBar progressBar;
@@ -37,15 +41,15 @@ public class TicketHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tickethistory);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_tickethistory);
 
         // Initialize views
-        recyclerViewTickets = findViewById(R.id.recyclerViewTickets);
-        emptyStateLayout = findViewById(R.id.emptyStateLayout);
-        progressBar = findViewById(R.id.progressBar);
-        ImageButton btnBack = findViewById(R.id.btnBack);
-        TextView tvTitle = findViewById(R.id.tvTitle);
-        Button btnBookTicket = findViewById(R.id.btnBookTicket);
+        recyclerViewTickets = binding.recyclerViewTickets;
+        emptyStateLayout = binding.emptyStateLayout;
+        progressBar = binding.progressBar;
+        ImageButton btnBack = binding.btnBack;
+        TextView tvTitle = binding.tvTitle;
+        Button btnBookTicket = binding.btnBookTicket;
 
         // Set up RecyclerView
         recyclerViewTickets.setLayoutManager(new LinearLayoutManager(this));
@@ -71,16 +75,16 @@ public class TicketHistoryActivity extends AppCompatActivity {
 
         // Giả sử bạn lưu token sau khi login vào SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        String jwtToken = sharedPreferences.getString("token", null);
+//        String jwtToken = sharedPreferences.getString("token", null);
+//
+//        if (jwtToken == null) {
+//            // Token không có => chưa đăng nhập
+//            progressBar.setVisibility(View.GONE);
+//            emptyStateLayout.setVisibility(View.VISIBLE);
+//            return;
+//        }
 
-        if (jwtToken == null) {
-            // Token không có => chưa đăng nhập
-            progressBar.setVisibility(View.GONE);
-            emptyStateLayout.setVisibility(View.VISIBLE);
-            return;
-        }
-
-        //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NTU2MjE1OSwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.nzfO3v0PCpxaL6ci7RtXPDA78rXmBLtZcKaxttAj50OIJH0NT5Mu1Si1IawV5rmWnVyTTyl6Fwk_tEoej7Ojog";
+        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NTU2MjE1OSwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.nzfO3v0PCpxaL6ci7RtXPDA78rXmBLtZcKaxttAj50OIJH0NT5Mu1Si1IawV5rmWnVyTTyl6Fwk_tEoej7Ojog";
 
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<List<Booking>>> call = apiService.getBookingHistory("Bearer " + jwtToken);

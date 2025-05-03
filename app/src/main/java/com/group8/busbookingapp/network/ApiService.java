@@ -25,6 +25,8 @@ public interface ApiService {
     @GET("/api/bookings/history")
     Call<ApiResponse<List<Booking>>> getBookingHistory(@Header("Authorization") String token);
 
+    @POST("/api/bookings/cancel")
+    Call<ApiResponse<Booking>> cancelBooking(@Query("bookingCode") String bookingCode);
     @GET("/api/trips/search")
     Call<ApiResponse<List<Trip>>> searchTrips(
             @Query("departure") String departure,

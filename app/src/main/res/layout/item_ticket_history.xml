@@ -41,7 +41,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <!-- Tên tuyến xe buýt -->
         <TextView
             android:id="@+id/tvRouteName"
@@ -132,10 +131,9 @@
                     android:layout_marginStart="4dp"
                     android:text="21/03/2025, 08:30"
                     android:textColor="#212121" />
-
             </LinearLayout>
 
-            <!--Mã vé -->
+            <!-- Mã vé -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -249,12 +247,26 @@
                 android:id="@+id/btnReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:backgroundTint="#0D47A1"
                 android:minHeight="36dp"
                 android:text="Đánh giá"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#0D47A1"
+                android:minHeight="36dp"
+                android:text="Hủy vé"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
