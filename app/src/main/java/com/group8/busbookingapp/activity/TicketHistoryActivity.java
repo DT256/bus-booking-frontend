@@ -69,18 +69,18 @@ public class TicketHistoryActivity extends AppCompatActivity {
         emptyStateLayout.setVisibility(View.GONE);
         recyclerViewTickets.setVisibility(View.GONE);
 
-//        // Giả sử bạn lưu token sau khi login vào SharedPreferences
-//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        String jwtToken = sharedPreferences.getString("jwt_token", null);
-//
-//        if (jwtToken == null) {
-//            // Token không có => chưa đăng nhập
-//            progressBar.setVisibility(View.GONE);
-//            emptyStateLayout.setVisibility(View.VISIBLE);
-//            return;
-//        }
+        // Giả sử bạn lưu token sau khi login vào SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String jwtToken = sharedPreferences.getString("token", null);
 
-        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NTU2MjE1OSwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.nzfO3v0PCpxaL6ci7RtXPDA78rXmBLtZcKaxttAj50OIJH0NT5Mu1Si1IawV5rmWnVyTTyl6Fwk_tEoej7Ojog";
+        if (jwtToken == null) {
+            // Token không có => chưa đăng nhập
+            progressBar.setVisibility(View.GONE);
+            emptyStateLayout.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NTU2MjE1OSwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.nzfO3v0PCpxaL6ci7RtXPDA78rXmBLtZcKaxttAj50OIJH0NT5Mu1Si1IawV5rmWnVyTTyl6Fwk_tEoej7Ojog";
 
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<List<Booking>>> call = apiService.getBookingHistory("Bearer " + jwtToken);
