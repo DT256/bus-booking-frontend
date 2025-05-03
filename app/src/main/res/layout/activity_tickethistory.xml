@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.group8.busbookingapp.viewmodel.TicketHistoryViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Quay lại"
+                android:contentDescription="@string/back"
                 android:padding="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +41,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LỊCH SỬ ĐẶT VÉ"
+                android:text="@string/ticket_history_title"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -45,28 +52,38 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- RecyclerView để hiển thị danh sách vé -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewTickets"
+        <!-- TabLayout for status filtering -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            app:tabIndicatorColor="#0D47A1"
+            app:tabSelectedTextColor="#0D47A1"
+            app:tabTextColor="#757575"
+            app:layout_constraintTop_toBottomOf="@id/customToolbar" />
+
+        <!-- ViewPager2 to display fragments for each status -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:clipToPadding="false"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customToolbar"
-            tools:listitem="@layout/item_ticket_history" />
+            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
-        <!-- Hiển thị thông báo khi không có dữ liệu -->
+        <!-- Empty state -->
         <LinearLayout
             android:id="@+id/emptyStateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customToolbar">
+            app:layout_constraintTop_toBottomOf="@id/tabLayout">
 
             <ImageView
                 android:layout_width="120dp"
@@ -77,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Bạn chưa có lịch sử đặt vé nào"
+                android:text="@string/no_booking_history"
                 android:textColor="#757575"
                 android:textSize="16sp" />
 
@@ -89,7 +106,8 @@
                 android:backgroundTint="#0D47A1"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
-                android:text="Đặt vé ngay"
+                android:text="@string/book_ticket"
+                android:contentDescription="@string/book_ticket"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -98,11 +116,11 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customToolbar" />
+            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

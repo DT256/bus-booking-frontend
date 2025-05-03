@@ -24,7 +24,7 @@
             android:paddingTop="2dp"
             android:paddingEnd="8dp"
             android:paddingBottom="2dp"
-            android:text="Hoàn thành"
+            android:text="@string/completed"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Thời gian đặt vé:"
+                    android:text="@string/booking_time"
                     android:textColor="#757575" />
 
                 <TextView
@@ -121,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Thời gian đi:"
+                    android:text="@string/departure_time"
                     android:textColor="#757575" />
 
                 <TextView
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Mã vé:"
+                    android:text="@string/booking_code"
                     android:textColor="#757575" />
 
                 <TextView
@@ -179,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Số lượng vé:"
+                    android:text="@string/ticket_quantity"
                     android:textColor="#757575" />
 
                 <TextView
@@ -208,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Tổng tiền:"
+                    android:text="@string/total_price"
                     android:textColor="#757575" />
 
                 <TextView
@@ -238,7 +238,8 @@
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#E0E0E0"
                 android:minHeight="36dp"
-                android:text="Chi tiết"
+                android:text="@string/view_details"
+                android:contentDescription="@string/view_details"
                 android:textAllCaps="false"
                 android:textColor="#212121"
                 android:textSize="12sp" />
@@ -250,7 +251,8 @@
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#0D47A1"
                 android:minHeight="36dp"
-                android:text="Đánh giá"
+                android:text="@string/review"
+                android:contentDescription="@string/review"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
@@ -262,7 +264,8 @@
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#0D47A1"
                 android:minHeight="36dp"
-                android:text="Hủy vé"
+                android:text="@string/cancel_ticket"
+                android:contentDescription="@string/cancel_ticket"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />

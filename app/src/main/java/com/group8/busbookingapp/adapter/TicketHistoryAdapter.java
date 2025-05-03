@@ -3,7 +3,7 @@ package com.group8.busbookingapp.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +11,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.activity.ReviewActivity;
+import com.group8.busbookingapp.activity.TicketHistoryActivity;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.model.Booking;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,10 +34,12 @@ import retrofit2.Response;
 public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdapter.TicketViewHolder> {
     private Context context;
     private List<Booking> bookingList;
+    private ApiService apiService;
 
     public TicketHistoryAdapter(Context context, List<Booking> bookingList) {
         this.context = context;
-        this.bookingList = bookingList;
+        this.bookingList = new ArrayList<>(bookingList);
+        this.apiService = ApiClient.getClient().create(ApiService.class);
     }
 
     @NonNull
@@ -54,26 +55,26 @@ public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdap
 
         // Status
         String status = booking.getStatus();
-        holder.tvStatus.setText(status);
         switch (status.toUpperCase()) {
             case "COMPLETED":
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_completed);
-                holder.tvStatus.setText("Hoàn thành");
+                holder.tvStatus.setText(R.string.completed);
                 break;
             case "CANCELLED":
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_cancelled);
-                holder.tvStatus.setText("Đã hủy");
+                holder.tvStatus.setText(R.string.cancelled);
                 break;
             case "PENDING":
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                holder.tvStatus.setText("Đang chờ");
+                holder.tvStatus.setText(R.string.pending);
                 break;
             case "CONFIRMED":
-                holder.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
-                holder.tvStatus.setText("Xác nhận");
+                holder.tvStatus.setBackgroundResource(R.drawable.bg_status_confirmed);
+                holder.tvStatus.setText(R.string.confirmed);
                 break;
             default:
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_status_pending);
+                holder.tvStatus.setText(status);
                 break;
         }
 
@@ -93,20 +94,28 @@ public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdap
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault());
-            Date date = inputFormat.parse(booking.getCreatedAt().split("\\.")[0]);
+            String dateStr = booking.getCreatedAt();
+            if (dateStr.contains(".")) {
+                dateStr = dateStr.split("\\.")[0];
+            }
+            Date date = inputFormat.parse(dateStr);
             holder.tvBookingTime.setText(outputFormat.format(date));
         } catch (Exception e) {
-            holder.tvBookingTime.setText(booking.getCreatedAt());
+            holder.tvBookingTime.setText(R.string.unknown_date);
         }
 
         // Departure time
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault());
-            Date date = inputFormat.parse(booking.getDepartureTime().split("\\.")[0]);
+            String dateStr = booking.getDepartureTime();
+            if (dateStr.contains(".")) {
+                dateStr = dateStr.split("\\.")[0];
+            }
+            Date date = inputFormat.parse(dateStr);
             holder.tvDepartureTime.setText(outputFormat.format(date));
         } catch (Exception e) {
-            holder.tvDepartureTime.setText(booking.getDepartureTime());
+            holder.tvDepartureTime.setText(R.string.unknown_date);
         }
 
         // Ticket quantity
@@ -117,33 +126,24 @@ public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdap
 
         // Button actions
         holder.btnViewDetails.setOnClickListener(v -> {
-            // TODO: handle view details
+            // TODO: Implement TicketDetailsActivity
+            Toast.makeText(context, "Xem chi tiết vé: " + booking.getBookingCode(), Toast.LENGTH_SHORT).show();
         });
 
-        // Show/hide review button based on trip status
-        if ("COMPLETED".equals(booking.getStatus())) {
-            holder.btnReview.setVisibility(View.VISIBLE);
-            holder.btnReview.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ReviewActivity.class);
-                intent.putExtra("bookingId", booking.getId());
-                intent.putExtra("routeInfo", booking.getStartCity() + " - " + booking.getEndCity());
-                intent.putExtra("tripDate", booking.getDepartureTime());
-                intent.putExtra("companyName", booking.getStartCity());
-                context.startActivity(intent);
-            });
-        } else {
-            holder.btnReview.setVisibility(View.GONE);
-        }
+        // Show/hide review button
+        holder.btnReview.setVisibility("COMPLETED".equals(booking.getStatus()) ? View.VISIBLE : View.GONE);
+        holder.btnReview.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ReviewActivity.class);
+            intent.putExtra("bookingId", booking.getId());
+            intent.putExtra("routeInfo", booking.getStartCity() + " - " + booking.getEndCity());
+            intent.putExtra("tripDate", booking.getDepartureTime());
+            intent.putExtra("companyName", booking.getStartCity());
+            context.startActivity(intent);
+        });
 
-        // Show/hide cancel button based on trip status
-        if ("PENDING".equals(booking.getStatus())) {
-            holder.btnCancel.setVisibility(View.VISIBLE);
-            holder.btnCancel.setOnClickListener(v -> {
-                confirmCancelBooking(booking.getBookingCode(), position);
-            });
-        } else {
-            holder.btnCancel.setVisibility(View.GONE);
-        }
+        // Show/hide cancel button
+        holder.btnCancel.setVisibility("PENDING".equals(booking.getStatus()) ? View.VISIBLE : View.GONE);
+        holder.btnCancel.setOnClickListener(v -> confirmCancelBooking(booking.getBookingCode()));
     }
 
     @Override
@@ -152,43 +152,79 @@ public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdap
     }
 
     public void updateData(List<Booking> newBookingList) {
-        this.bookingList = newBookingList;
-        notifyDataSetChanged();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(bookingList, newBookingList));
+        bookingList.clear();
+        bookingList.addAll(newBookingList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
-    private void confirmCancelBooking(String bookingCode, int position) {
+    private static class DiffCallback extends DiffUtil.Callback {
+        private final List<Booking> oldList;
+        private final List<Booking> newList;
+
+        DiffCallback(List<Booking> oldList, List<Booking> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).getId().equals(newList.get(newItemPosition).getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
+        }
+    }
+
+    private void confirmCancelBooking(String bookingCode) {
         new AlertDialog.Builder(context)
-                .setTitle("Xác nhận")
-                .setMessage("Bạn có chắc chắn muốn hủy đặt vé này không?")
-                .setPositiveButton("Có", (dialog, which) -> {
-                    cancelBooking(bookingCode, position);
-                })
-                .setNegativeButton("Không", null)
+                .setTitle(R.string.confirm)
+                .setMessage(R.string.cancel_booking_confirmation)
+                .setPositiveButton(R.string.yes, (dialog, which) -> cancelBooking(bookingCode))
+                .setNegativeButton(R.string.no, null)
                 .show();
     }
 
-    private void cancelBooking(String bookingCode, int position) {
-        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+    private void cancelBooking(String bookingCode) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String jwtToken = sharedPreferences.getString("token", null);
+        if (jwtToken == null) {
+            Toast.makeText(context, R.string.please_login, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Call<ApiResponse<Booking>> call = apiService.cancelBooking(bookingCode);
         call.enqueue(new Callback<ApiResponse<Booking>>() {
             @Override
             public void onResponse(Call<ApiResponse<Booking>> call, Response<ApiResponse<Booking>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getStatus().equals("success")) {
+                if (response.isSuccessful() && response.body() != null && "success".equals(response.body().getStatus())) {
                     Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    // Update the booking list
-                    bookingList.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, bookingList.size());
+                    if (context instanceof TicketHistoryActivity) {
+                        ((TicketHistoryActivity) context).refreshBookings();
+                    }
                 } else {
-                    String errorMessage = response.body() != null ? response.body().getMessage() : "Lỗi khi hủy vé";
+                    String errorMessage = response.body() != null ? response.body().getMessage() : "getString(R.string.cancel_booking_error)";
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Booking>> call, Throwable t) {
-                Toast.makeText(context, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("apdapter", t.getMessage());
+                String errorMessage = t instanceof java.io.IOException ?
+                        "getString(R.string.network_error)" : "Lỗi: " + t.getMessage();
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }

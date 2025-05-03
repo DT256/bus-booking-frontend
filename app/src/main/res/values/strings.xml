@@ -39,4 +39,27 @@
     <string name="scan_to_board">Quét mã để lên xe</string>
     <string name="qr_code">Mã QR vé xe buýt</string>
     <string name="ticket_id_value">TK-XYZ12345</string>
+
+    <string name="ticket_history_title">Lịch sử đặt vé</string>
+    <string name="no_booking_history">Bạn chưa có lịch sử đặt vé nào</string>
+    <string name="book_ticket">Đặt vé ngay</string>
+    <string name="navigate_to_booking">Điều hướng đến màn hình đặt vé</string>
+    <string name="please_login">Vui lòng đăng nhập lại</string>
+    <string name="network_error">Không thể kết nối đến máy chủ</string>
+    <string name="completed">Hoàn thành</string>
+    <string name="cancelled">Đã hủy</string>
+    <string name="pending">Đang chờ</string>
+    <string name="unknown_date">Không xác định</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="cancel_booking_confirmation">Bạn có chắc chắn muốn hủy đặt vé này không?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="cancel_booking_error">Lỗi khi hủy vé</string>
+    <string name="booking_time">Thời gian đặt vé:</string>
+    <string name="booking_code">Mã vé:</string>
+    <string name="ticket_quantity">Số lượng vé:</string>
+    <string name="total_price">Tổng tiền:</string>
+    <string name="view_details">Chi tiết</string>
+    <string name="review">Đánh giá</string>
+
 </resources>

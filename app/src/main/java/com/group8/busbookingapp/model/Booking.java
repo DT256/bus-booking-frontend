@@ -100,4 +100,27 @@ public class Booking {
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return seats == booking.seats &&
+                totalPrice == booking.totalPrice &&
+                java.util.Objects.equals(id, booking.id) &&
+                java.util.Objects.equals(userId, booking.userId) &&
+                java.util.Objects.equals(busImage, booking.busImage) &&
+                java.util.Objects.equals(startCity, booking.startCity) &&
+                java.util.Objects.equals(endCity, booking.endCity) &&
+                java.util.Objects.equals(status, booking.status) &&
+                java.util.Objects.equals(bookingCode, booking.bookingCode) &&
+                java.util.Objects.equals(createdAt, booking.createdAt) &&
+                java.util.Objects.equals(departureTime, booking.departureTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id, userId, busImage, startCity, endCity, seats, totalPrice, status, bookingCode, createdAt, departureTime);
+    }
 }
