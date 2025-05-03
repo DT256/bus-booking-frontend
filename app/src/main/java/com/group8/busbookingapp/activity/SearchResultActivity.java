@@ -51,7 +51,7 @@ public class SearchResultActivity extends AppCompatActivity {
         tvDate.setText(dateInput);
         tvResultCount.setText(tripList.size() + " chuyến xe tìm thấy");
 
-        tripAdapter = new TripAdapter(tripList);
+        tripAdapter = new TripAdapter(this, tripList);
         rvBusList.setLayoutManager(new LinearLayoutManager(this));
         rvBusList.setAdapter(tripAdapter);
 

@@ -1,6 +1,7 @@
 package com.group8.busbookingapp.network;
 
 import com.group8.busbookingapp.dto.ApiResponse;
+import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
 import com.group8.busbookingapp.model.Booking;
@@ -19,6 +20,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Header;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -33,6 +35,9 @@ public interface ApiService {
             @Query("destination") String arrival,
             @Query("date") String date // format: yyyy-MM-dd HH:mm:ss
     );
+
+    @GET("/api/trips/{tripId}")
+    Call<ApiResponse<TripDetailsResponse>> getTripDetails(@Path("tripId") String tripId);
 
     @POST("/api/auth/login")
     Call<ApiResponse<LoginResponse>> login(@Body Login request);
