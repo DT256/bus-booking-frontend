@@ -5,6 +5,8 @@ import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
 import com.group8.busbookingapp.model.Booking;
+import com.group8.busbookingapp.model.Register;
+import com.group8.busbookingapp.model.RegisterResponse;
 import com.group8.busbookingapp.model.ReviewResponse;
 import com.group8.busbookingapp.model.Trip;
 
@@ -41,6 +43,9 @@ public interface ApiService {
 
     @POST("/api/auth/login")
     Call<ApiResponse<LoginResponse>> login(@Body Login request);
+
+    @POST("/api/auth/register")
+    Call<ApiResponse<RegisterResponse>> register(@Body Register request);
 
 
 
