@@ -85,10 +85,10 @@ public class RegisterActivity extends AppCompatActivity {
                     String jwt = response.body().getData().getJwt();
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, OTPActivity.class);
-                    intent.putExtra("jwt", jwt); // hoặc intent.putExtra("email", email);
+                    intent.putExtra("jwt", jwt);
+                    intent.putExtra("email", email);
                     startActivity(intent);
                     finish();
-                    // Lưu jwt nếu cần
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
                 }

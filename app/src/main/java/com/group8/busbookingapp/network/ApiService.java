@@ -17,6 +17,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -46,6 +48,12 @@ public interface ApiService {
 
     @POST("/api/auth/register")
     Call<ApiResponse<RegisterResponse>> register(@Body Register request);
+
+    @POST("/api/auth/active-account")
+    Call<ApiResponse<String>> activeAccount(@Query("email") String email, @Query("otp") String otp);
+
+    @GET("/api/auth/send-otp")
+    Call<ApiResponse<String>> resendOtp(@Query("email") String email);
 
 
 
