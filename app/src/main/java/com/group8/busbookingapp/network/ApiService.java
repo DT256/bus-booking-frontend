@@ -33,14 +33,15 @@ public interface ApiService {
 
     @POST("/api/bookings/cancel")
     Call<ApiResponse<Booking>> cancelBooking(@Query("bookingCode") String bookingCode);
-    @GET("/api/trips/search")
+
+    @GET("api/trips/search")
     Call<ApiResponse<List<Trip>>> searchTrips(
             @Query("departure") String departure,
             @Query("destination") String arrival,
             @Query("date") String date // format: yyyy-MM-dd HH:mm:ss
     );
 
-    @GET("/api/trips/{tripId}")
+    @GET("api/trips/{tripId}")
     Call<ApiResponse<TripDetailsResponse>> getTripDetails(@Path("tripId") String tripId);
 
     @POST("/api/auth/login")
@@ -55,8 +56,6 @@ public interface ApiService {
     @GET("/api/auth/send-otp")
     Call<ApiResponse<String>> resendOtp(@Query("email") String email);
 
-
-
     @GET("getMessages")
     Call<List<Map<String, Object>>> getMessages(
             @Query("senderId") String senderId,
@@ -70,6 +69,4 @@ public interface ApiService {
             @Part("data") RequestBody data,
             @Part List<MultipartBody.Part> images
     );
-
-
 }

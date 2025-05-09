@@ -1,5 +1,6 @@
 package com.group8.busbookingapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -33,6 +35,7 @@ import retrofit2.Response;
 public class SeatSelectionActivity extends AppCompatActivity {
     private static final String TAG = "SeatSelectionActivity";
     private static final int MAX_SEATS = 5; // Maximum number of seats that can be selected
+    private static final int REQUEST_SELECT_STOP_POINTS = 1;
     private Toolbar toolbar;
     private TextView tvRouteName, tvDateTime, tvBusType;
     private TextView tvSelectedSeats, tvTotal;
@@ -41,12 +44,13 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private List<View> seatViews = new ArrayList<>();
     private List<String> selectedSeats = new ArrayList<>();
     private double pricePerSeat;
+    private String tripId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get tripId from Intent
-        String tripId = getIntent().getStringExtra("tripId");
+        tripId = getIntent().getStringExtra("tripId");
         if (tripId != null) {
             fetchTripDetails(tripId);
         } else {
@@ -130,7 +134,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn ít nhất một ghế", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Ghế đã chọn: " + String.join(", ", selectedSeats), Toast.LENGTH_LONG).show();
-                // Implement navigation to next screen here
+                onSeatsSelected();
             }
         });
     }
@@ -270,6 +274,25 @@ public class SeatSelectionActivity extends AppCompatActivity {
             tvSelectedSeats.setText(String.join(", ", selectedSeats));
             double total = selectedSeats.size() * pricePerSeat;
             tvTotal.setText(String.format(Locale.getDefault(), "%,.0f VND", total));
+        }
+    }
+
+    private void onSeatsSelected() {
+        // Start SelectStopPointsActivity
+        Intent intent = new Intent(this, SelectStopPointsActivity.class);
+        intent.putExtra("TRIP_ID", tripId);
+        startActivityForResult(intent, REQUEST_SELECT_STOP_POINTS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SELECT_STOP_POINTS && resultCode == RESULT_OK && data != null) {
+            String pickupPointId = data.getStringExtra("PICKUP_POINT_ID");
+            String dropoffPointId = data.getStringExtra("DROPOFF_POINT_ID");
+            
+            // Continue with booking process using selected seats and stop points
+            // You can start the next activity or process the booking here
         }
     }
 }
