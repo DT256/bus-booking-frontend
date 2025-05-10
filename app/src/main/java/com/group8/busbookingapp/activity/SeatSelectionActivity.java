@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -45,18 +46,35 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private List<String> selectedSeats = new ArrayList<>();
     private double pricePerSeat;
     private String tripId;
+    private View loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_seat_selection);
+
+        // Initialize loading view
+        loadingView = getLayoutInflater().inflate(R.layout.layout_loading, null);
+        loadingView.setVisibility(View.GONE);
+        ((ViewGroup) findViewById(android.R.id.content)).addView(loadingView);
+
         // Get tripId from Intent
         tripId = getIntent().getStringExtra("tripId");
         if (tripId != null) {
+            showLoading();
             fetchTripDetails(tripId);
         } else {
             Toast.makeText(this, "Trip ID không đúng", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void showLoading() {
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading() {
+        loadingView.setVisibility(View.GONE);
     }
 
     private void fetchTripDetails(String tripId) {
@@ -65,6 +83,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         call.enqueue(new Callback<ApiResponse<TripDetailsResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<TripDetailsResponse>> call, Response<ApiResponse<TripDetailsResponse>> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "API Response: " + response.body().toString());
                     if (response.body().getStatus().equals("success")) {
@@ -91,6 +110,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<TripDetailsResponse>> call, Throwable t) {
+                hideLoading();
                 Log.e(TAG, "Network Error: " + t.getMessage(), t);
                 Toast.makeText(SeatSelectionActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
@@ -226,7 +246,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
                                     seatLayout.setBackgroundResource(R.drawable.bg_status_completed);
                                     seatView.setOnClickListener(v -> toggleSeatSelection(seat, seatView, seatLayout));
                                 } else {
-                                    seatLayout.setBackgroundResource(R.drawable.bg_status_cancelled);
+                                    seatLayout.setBackgroundResource(R.drawable.bg_status_unavailable);
                                     seatView.setEnabled(false);
                                 }
                             } else {
@@ -281,7 +301,10 @@ public class SeatSelectionActivity extends AppCompatActivity {
         // Start SelectStopPointsActivity
         Intent intent = new Intent(this, SelectStopPointsActivity.class);
         intent.putExtra("TRIP_ID", tripId);
-        startActivityForResult(intent, REQUEST_SELECT_STOP_POINTS);
+        intent.putExtra("ROUTE_NAME", tvRouteName.getText().toString());
+        intent.putExtra("DATE_TIME", tvDateTime.getText().toString());
+        intent.putExtra("BUS_TYPE", tvBusType.getText().toString());
+        startActivity(intent);
     }
 
     @Override

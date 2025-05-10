@@ -180,7 +180,7 @@
                 <View
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:background="#FF5722"
+                    android:background="#FFC107"
                     android:elevation="1dp" />
 
                 <TextView

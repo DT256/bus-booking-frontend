@@ -2,7 +2,11 @@ package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,30 +21,44 @@ import com.group8.busbookingapp.model.StopPoint;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SelectStopPointsActivity extends AppCompatActivity {
+    private final String TAG = "SelectStopPointsActivity";
     private RecyclerView rvPickupPoints;
     private RecyclerView rvDropoffPoints;
+    private TextView tvRouteName, tvDateTime, tvBusType;
     private Button btnContinue;
     private StopPointAdapter pickupAdapter;
     private StopPointAdapter dropoffAdapter;
     private String tripId;
     private StopPoint selectedPickupPoint;
     private StopPoint selectedDropoffPoint;
+    private View loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_stop_points);
 
+        loadingView = getLayoutInflater().inflate(R.layout.layout_loading, null);
+        loadingView.setVisibility(View.GONE);
+        ((ViewGroup) findViewById(android.R.id.content)).addView(loadingView);
+
+
         // Get trip ID from intent
         tripId = getIntent().getStringExtra("TRIP_ID");
+        String routeName = getIntent().getStringExtra("ROUTE_NAME");
+        String dateTime = getIntent().getStringExtra("DATE_TIME");
+        String busType = getIntent().getStringExtra("BUS_TYPE");
         if (tripId == null) {
             Toast.makeText(this, "Không tìm thấy thông tin chuyến đi", Toast.LENGTH_SHORT).show();
             finish();
@@ -51,6 +69,14 @@ public class SelectStopPointsActivity extends AppCompatActivity {
         rvPickupPoints = findViewById(R.id.rvPickupPoints);
         rvDropoffPoints = findViewById(R.id.rvDropoffPoints);
         btnContinue = findViewById(R.id.btnContinue);
+        tvRouteName = findViewById(R.id.tvRouteName);
+        tvDateTime = findViewById(R.id.tvDateTime);
+        tvBusType = findViewById(R.id.tvBusType);
+
+        tvRouteName.setText(routeName);
+        tvDateTime.setText(dateTime);
+        tvBusType.setText(busType);
+
 
         // Setup RecyclerViews
         rvPickupPoints.setLayoutManager(new LinearLayoutManager(this));
@@ -91,11 +117,13 @@ public class SelectStopPointsActivity extends AppCompatActivity {
     }
 
     private void loadStopPoints() {
+        showLoading();
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<TripDetailsResponse>> call = apiService.getTripDetails(tripId);
         call.enqueue(new Callback<ApiResponse<TripDetailsResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<TripDetailsResponse>> call, Response<ApiResponse<TripDetailsResponse>> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     TripDetailsResponse tripDetails = response.body().getData();
                     List<StopPoint> allStopPoints = tripDetails.getStopPoints();
@@ -122,6 +150,8 @@ public class SelectStopPointsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<TripDetailsResponse>> call, Throwable t) {
+                hideLoading();
+                Log.e(TAG, "Network Error: " + t.getMessage(), t);
                 Toast.makeText(SelectStopPointsActivity.this, 
                     "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -130,5 +160,12 @@ public class SelectStopPointsActivity extends AppCompatActivity {
 
     private void updateContinueButton() {
         btnContinue.setEnabled(selectedPickupPoint != null && selectedDropoffPoint != null);
+    }
+    private void showLoading() {
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading() {
+        loadingView.setVisibility(View.GONE);
     }
 } 
