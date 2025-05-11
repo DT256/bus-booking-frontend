@@ -66,6 +66,9 @@
 
         </activity>
         <activity android:name=".activity.SelectStopPointsActivity" />
+        <activity
+            android:name=".activity.PassengerInfoActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

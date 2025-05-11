@@ -1,6 +1,7 @@
 package com.group8.busbookingapp.network;
 
 import com.group8.busbookingapp.dto.ApiResponse;
+import com.group8.busbookingapp.dto.BookingRequest;
 import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
@@ -17,8 +18,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -28,6 +27,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    @POST("/api/bookings/book")
+    Call<ApiResponse<Booking>> bookTrip(@Header("Authorization") String token,
+                                        @Body BookingRequest request);
     @GET("/api/bookings/history")
     Call<ApiResponse<List<Booking>>> getBookingHistory(@Header("Authorization") String token);
 

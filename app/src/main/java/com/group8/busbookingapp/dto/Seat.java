@@ -1,9 +1,18 @@
 package com.group8.busbookingapp.dto;
 
 public class Seat {
+    private String seatId;
     private String seatNumber;
     private int floor;
     private String status;
+
+    public String getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
+    }
 
     public String getSeatNumber() {
         return seatNumber;
