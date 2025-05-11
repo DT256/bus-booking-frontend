@@ -87,6 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Intent intent = new Intent(RegisterActivity.this, OTPActivity.class);
                     intent.putExtra("jwt", jwt);
                     intent.putExtra("email", email);
+                    intent.putExtra("purpose", "register");
                     startActivity(intent);
                     finish();
                 } else {

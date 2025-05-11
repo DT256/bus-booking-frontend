@@ -39,6 +39,7 @@ public class OTPActivity extends AppCompatActivity {
         btnVerify = findViewById(R.id.btnVerify);
 
         String email = getIntent().getStringExtra("email");
+        String purpose = getIntent().getStringExtra("purpose");
 
         TextView tvResendOtp = findViewById(R.id.tvResendOtp);
         tvResendOtp.setOnClickListener(v -> {
@@ -88,9 +89,18 @@ public class OTPActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(OTPActivity.this, "Xác thực thành công!", Toast.LENGTH_SHORT).show();
                         // Chuyển sang màn hình đăng nhập
-                        Intent intent = new Intent(OTPActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if ("register".equals(purpose)) {
+                            // Chuyển về LoginActivity
+                            Intent intent = new Intent(OTPActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else if ("forgot_password".equals(purpose)) {
+                            // Chuyển đến ResetPasswordActivity
+                            Intent intent = new Intent(OTPActivity.this, ResetPasswordActivity.class);
+                            intent.putExtra("email", email); // truyền email để đặt lại mật khẩu
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
                         Log.e("OTP_CHECK", "API Call Failed, Response Code: " + response.code());
                         Toast.makeText(OTPActivity.this, "OTP không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();

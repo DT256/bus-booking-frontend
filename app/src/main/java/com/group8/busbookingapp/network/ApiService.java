@@ -18,6 +18,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -57,6 +59,14 @@ public interface ApiService {
 
     @GET("/api/auth/send-otp")
     Call<ApiResponse<String>> resendOtp(@Query("email") String email);
+
+    @FormUrlEncoded
+    @POST("/api/auth/forgot-password")
+    Call<ApiResponse<String>> resetPassword(
+            @Field("email") String email,
+            @Field("newPassword") String newPassword
+    );
+
 
     @GET("getMessages")
     Call<List<Map<String, Object>>> getMessages(
