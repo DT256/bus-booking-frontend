@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvForgotPassword;
     private Button btnLogin;
     private EditText etEmail, etPassword;
+    private View loadingLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        loadingLayout = findViewById(R.id.loadingLayout);
+
+        showLoading(false);
 
 
         tvRegister.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu", Toast.LENGTH_SHORT).show();
-            } else if (password.length()<6) {
+            } else if (password.length() < 6) {
                 Toast.makeText(this, "Mật khẩu yêu cầu ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
             } else {
                 loginUser(email, password);
@@ -74,13 +79,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
     private void loginUser(String email, String password) {
+        showLoading(true);
         ApiService ApiService = ApiClient.getClient().create(ApiService.class);
         Login request = new Login(email, password);
 
         ApiService.login(request).enqueue(new Callback<ApiResponse<LoginResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<LoginResponse>> call, Response<ApiResponse<LoginResponse>> response) {
+                showLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<LoginResponse> apiResponse = response.body();
                     LoginResponse loginData = apiResponse.getData();
@@ -107,7 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Parse lỗi từ response.errorBody()
                         String errorJson = response.errorBody().string();
                         Gson gson = new Gson();
-                        Type type = new TypeToken<ApiResponse<Object>>(){}.getType();
+                        Type type = new TypeToken<ApiResponse<Object>>() {
+                        }.getType();
                         ApiResponse<?> errorResponse = gson.fromJson(errorJson, type);
 
                         String errorMessage = errorResponse.getMessage();
@@ -122,8 +131,14 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<LoginResponse>> call, Throwable t) {
+                showLoading(false);
                 Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void showLoading(boolean show) {
+        if (loadingLayout != null) {
+            loadingLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 }
