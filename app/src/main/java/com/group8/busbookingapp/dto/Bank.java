@@ -20,6 +20,6 @@ public class Bank {
 
     @Override
     public String toString() {
-        return name; // dùng để hiển thị trong Spinner
+        return shortName; // dùng để hiển thị trong Spinner
     }
 }
