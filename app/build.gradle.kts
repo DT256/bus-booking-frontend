@@ -54,6 +54,8 @@ dependencies {
     implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.4")
     implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("com.android.volley:volley:1.2.1")
+
 
 
 }
