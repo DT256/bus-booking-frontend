@@ -3,6 +3,7 @@ package com.group8.busbookingapp.network;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.BookingRequest;
 import com.group8.busbookingapp.dto.TripDetailsResponse;
+import com.group8.busbookingapp.model.ChatMessage;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
 import com.group8.busbookingapp.model.Booking;
@@ -80,5 +81,11 @@ public interface ApiService {
             @Header("Authorization") String authorization,
             @Part("data") RequestBody data,
             @Part List<MultipartBody.Part> images
+    );
+
+    @POST("/api/chatbot/message")
+    Call<ChatMessage> sendChatMessage(
+        @Header("Authorization") String authorization,
+        @Body ChatMessage message
     );
 }
