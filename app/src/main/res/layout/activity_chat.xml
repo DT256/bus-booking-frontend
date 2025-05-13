@@ -47,7 +47,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-
     </androidx.appcompat.widget.Toolbar>
 
     <!-- Chat Messages RecyclerView -->
@@ -57,9 +56,57 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@id/messageInputLayout"
+        app:layout_constraintBottom_toTopOf="@id/quickMessagesLayout"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <!-- Quick Messages Area -->
+    <HorizontalScrollView
+        android:id="@+id/quickMessagesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/messageInputLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_find_route"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Tìm tuyến xe"
+                app:chipBackgroundColor="#E3F2FD"
+                app:chipStrokeColor="#1976D2"
+                app:chipStrokeWidth="1dp"
+                android:textColor="#1976D2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_view_bookings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Xem vé của tôi"
+                app:chipBackgroundColor="#E3F2FD"
+                app:chipStrokeColor="#1976D2"
+                app:chipStrokeWidth="1dp"
+                android:textColor="#1976D2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cancel_booking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Hủy vé"
+                app:chipBackgroundColor="#E3F2FD"
+                app:chipStrokeColor="#1976D2"
+                app:chipStrokeWidth="1dp"
+                android:textColor="#1976D2" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- Message Input Area -->
     <LinearLayout
