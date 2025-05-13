@@ -30,7 +30,7 @@
 
         </activity>
         <activity
-            android:name=".activity.PaymentActivity"
+            android:name=".activity.TicketActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

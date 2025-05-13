@@ -1,19 +1,22 @@
 package com.group8.busbookingapp.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +28,12 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.adapter.BankAdapter;
+import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.Bank;
+import com.group8.busbookingapp.dto.PaymentDTO;
+import com.group8.busbookingapp.network.ApiClient;
+import com.group8.busbookingapp.network.ApiService;
+import com.group8.busbookingapp.viewmodel.TicketHistoryViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,48 +42,68 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class PaymentActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class TicketActivity extends AppCompatActivity {
+
+
     AutoCompleteTextView autoCompleteBanks;
     ArrayList<Bank> bankList = new ArrayList<>();
     BankAdapter bankAdapter;
     ImageView imageViewQrCode;
-
+    Button btnPayTicket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
-        imageViewQrCode = findViewById(R.id.imageViewQrCode);
+        setContentView(R.layout.activity_ticketinfo);
         autoCompleteBanks = findViewById(R.id.autoCompleteBanks);
+        btnPayTicket = findViewById(R.id.btnPayTicket);
 
         loadBanksFromApi();
-        generateQRCode();
-    }
-    private void generateQRCode() {
-        try {
-            String paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=100000000&vnp_BankCode=NCB&vnp_Command=pay&vnp_CreateDate=20250512212438&vnp_CurrCode=VND&vnp_ExpireDate=20250512213938&vnp_IpAddr=0%3A0%3A0%3A0%3A0%3A0%3A0%3A1&vnp_Locale=vn&vnp_OrderInfo=Thanh+to%3Fn+%3F%3Fn+h%3Fng%3A75778174&vnp_OrderType=other&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvn-pay-callback%3Forderid%3D682014b9079efb094fbee2e6&vnp_TmnCode=6B1GMMOU&vnp_TxnRef=61086922&vnp_Version=2.1.0&vnp_SecureHash=72450788eb2a7986abad3a2b64c2e0118fae6c871e372e4861ef8ce3750ae580a18168a62012bca95324473a529fa24ff31d4adf964168af04592367adf0a8b9";  // URL thanh toán
 
-            // Sử dụng ZXing để tạo mã QR
-            MultiFormatWriter writer = new MultiFormatWriter();
-            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            BitMatrix bitMatrix = writer.encode(paymentUrl, BarcodeFormat.QR_CODE, 512, 512, hints);
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
 
-            // Tạo bitmap từ BitMatrix
-            Bitmap bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.RGB_565);
-            for (int x = 0; x < 512; x++) {
-                for (int y = 0; y < 512; y++) {
-                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF);  // Màu đen cho mã QR, trắng cho nền
+        btnPayTicket.setOnClickListener(v -> {
+            Bank selectedBank = null;
+            for (Bank bank : bankList) {
+                if (bank.getCode().equals(autoCompleteBanks.getText().toString())) {
+                    selectedBank = bank;
+                    break;
                 }
             }
+            Log.d("dsfjkhf", "onCreate: " + autoCompleteBanks.getText().toString());
+            Log.d("dsfjkhf", "onCreate: " + bankList.toString());
+            Log.d("dsfjkhf", "onCreate: " + bankList.size());
+            if (selectedBank == null) {
+                Toast.makeText(this, "Vui lòng chọn ngân hàng hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Hiển thị mã QR trên ImageView
-            imageViewQrCode.setImageBitmap(bitmap);
+            int amount = 1000000;
+            String orderId = "682014b9079efb094fbee2e6";
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Lỗi tạo mã QR", Toast.LENGTH_SHORT).show();
-        }
+            Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(amount, selectedBank.getCode(), orderId);
+            call.enqueue(new Callback<ApiResponse<PaymentDTO>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<PaymentDTO>> call, Response<ApiResponse<PaymentDTO>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String url = response.body().getData().getPaymentUrl();
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                    } else {
+                        Toast.makeText(TicketActivity.this, "Lỗi khi tạo thanh toán", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<PaymentDTO>> call, Throwable t) {
+                    Toast.makeText(TicketActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     @Override
@@ -144,7 +172,4 @@ public class PaymentActivity extends AppCompatActivity {
 
         queue.add(request);
     }
-
-
-
 }

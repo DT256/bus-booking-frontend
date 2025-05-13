@@ -2,6 +2,7 @@ package com.group8.busbookingapp.network;
 
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.BookingRequest;
+import com.group8.busbookingapp.dto.PaymentDTO;
 import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.model.ChatMessage;
 import com.group8.busbookingapp.model.Login;
@@ -30,6 +31,12 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    @GET("/api/payments/vn-pay")
+    Call<ApiResponse<PaymentDTO>> createVnPayPayment(
+            @Query("amount") int amount,
+            @Query("bankCode") String bankCode,
+            @Query("orderId") String orderId
+    );
     @POST("/api/bookings/book")
     Call<ApiResponse<Booking>> bookTrip(@Header("Authorization") String token,
                                         @Body BookingRequest request);

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">BusBookingApp</string>
+    <string name="pay_ticket">Pay</string>
     <!-- Tiêu đề và thao tác -->
     <string name="back">Quay lại</string>
     <string name="ticket_details">Chi tiết vé</string>
