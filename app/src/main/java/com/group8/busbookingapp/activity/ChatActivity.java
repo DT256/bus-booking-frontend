@@ -26,7 +26,7 @@ public class ChatActivity extends AppCompatActivity {
     private final String TAG = "ChatActivity";
     private RecyclerView chatRecyclerView;
     private EditText messageInput;
-    private ImageButton sendButton;
+    private ImageButton sendButton, btnBack;
     private Chip chipFindRoute;
     private Chip chipViewBookings;
     private Chip chipCancelBooking;
@@ -46,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
         chipFindRoute = findViewById(R.id.chip_find_route);
         chipViewBookings = findViewById(R.id.chip_view_bookings);
         chipCancelBooking = findViewById(R.id.chip_cancel_booking);
+        btnBack = findViewById(R.id.btn_back);
 
         // Initialize managers
         chatManager = ChatManager.getInstance(this);
@@ -67,6 +68,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        btnBack.setOnClickListener(v -> finish());
+
         // Quick messages click listeners
         chipFindRoute.setOnClickListener(v -> sendMessage("Tìm tuyến xe"));
         chipViewBookings.setOnClickListener(v -> sendMessage("Xem vé của tôi"));
@@ -85,6 +88,7 @@ public class ChatActivity extends AppCompatActivity {
         sendButton.setEnabled(false); // Mặc định vô hiệu hóa
         // Load chat history
         updateChatDisplay();
+
     }
 
     private void sendMessage(String message) {

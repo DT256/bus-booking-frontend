@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class SelectStopPointsActivity extends AppCompatActivity {
     private RecyclerView rvPickupPoints, rvDropoffPoints;
     private TextView tvRouteName, tvDateTime;
     private Button btnContinue;
+    private ImageButton btnBack;
     private StopPointAdapter pickupAdapter, dropoffAdapter;
     private String tripId;
     private StopPoint selectedPickupPoint, selectedDropoffPoint;
@@ -55,6 +57,7 @@ public class SelectStopPointsActivity extends AppCompatActivity {
         rvPickupPoints = findViewById(R.id.rvPickupPoints);
         rvDropoffPoints = findViewById(R.id.rvDropoffPoints);
         btnContinue = findViewById(R.id.btnContinue);
+        btnBack = findViewById(R.id.btn_back);
         tvRouteName = findViewById(R.id.tvRouteName);
         tvDateTime = findViewById(R.id.tvDateTime);
 
@@ -96,6 +99,8 @@ public class SelectStopPointsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn điểm dừng", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void loadStopPoints() {

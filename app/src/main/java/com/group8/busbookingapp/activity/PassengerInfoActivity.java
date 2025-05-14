@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
     private TextInputEditText etFullName, etPhone, etEmail;
     private CheckBox cbSaveInfo;
     private Button btnConfirm;
+    private ImageButton btnBack;
     private Toolbar toolbar;
     private String tripId, pickupPointId, dropoffPointId;
     private ArrayList<String> selectedSeatIds, selectedSeatNumber;
@@ -55,6 +57,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         cbSaveInfo = findViewById(R.id.cbSaveInfo);
         btnConfirm = findViewById(R.id.btnConfirm);
+        btnBack = findViewById(R.id.btn_back);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -85,6 +88,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
         etEmail.setText(prefs.getString("email", ""));
 
         btnConfirm.setOnClickListener(v -> submitBooking());
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void submitBooking() {
