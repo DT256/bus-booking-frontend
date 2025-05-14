@@ -84,8 +84,9 @@ public class TicketActivity extends AppCompatActivity {
 
             int amount = 1000000;
             String orderId = "682014b9079efb094fbee2e6";
+            String baseUrl = ApiClient.getClient().baseUrl().toString();
 
-            Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(amount, selectedBank.getCode(), orderId);
+            Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(amount, selectedBank.getCode(), orderId, baseUrl);
             call.enqueue(new Callback<ApiResponse<PaymentDTO>>() {
                 @Override
                 public void onResponse(Call<ApiResponse<PaymentDTO>> call, Response<ApiResponse<PaymentDTO>> response) {

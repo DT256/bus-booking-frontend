@@ -35,7 +35,8 @@ public interface ApiService {
     Call<ApiResponse<PaymentDTO>> createVnPayPayment(
             @Query("amount") int amount,
             @Query("bankCode") String bankCode,
-            @Query("orderId") String orderId
+            @Query("orderId") String orderId,
+            @Query("baseUrl") String baseUrl
     );
     @POST("/api/bookings/book")
     Call<ApiResponse<Booking>> bookTrip(@Header("Authorization") String token,
