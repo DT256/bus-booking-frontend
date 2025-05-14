@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         sharedPreferences.edit().putString("token", jwt).apply();
 
                         // Chuyển qua SearchActivity
-                        Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

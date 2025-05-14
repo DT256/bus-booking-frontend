@@ -10,7 +10,7 @@ public class BookingPagerAdapter extends FragmentStateAdapter {
     private static final String[] STATUSES = {"PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"};
     private static final String[] TAB_TITLES = {"Đang chờ", "Xác nhận", "Đã hủy", "Hoàn thành"};
 
-    public BookingPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public BookingPagerAdapter(@NonNull Fragment fragmentActivity) {
         super(fragmentActivity);
     }
 
