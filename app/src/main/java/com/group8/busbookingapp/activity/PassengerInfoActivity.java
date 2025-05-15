@@ -192,6 +192,9 @@ public class PassengerInfoActivity extends AppCompatActivity {
                     intent.putExtra("BOOKING_CODE", response.body().getData().getBookingCode());
                     intent.putExtra("SEAT", String.join(", ", selectedSeatNumber));
                     intent.putExtra("TIME", response.body().getData().getDepartureTime());
+                    intent.putExtra("ARRIVAL_TIME", response.body().getData().getArrivalTime());
+                    intent.putExtra("PICKUP", response.body().getData().getStartCity()); // Adjust if you have specific pickup data
+                    intent.putExtra("DROPOFF", response.body().getData().getEndCity()); // Adjust if you have specific dropoff data
 
                     startActivity(intent);
                     finish();

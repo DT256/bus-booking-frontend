@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.activity.ReviewActivity;
+import com.group8.busbookingapp.activity.TicketActivity;
 import com.group8.busbookingapp.activity.TicketHistoryActivity;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.model.Booking;
@@ -126,8 +127,20 @@ public class TicketHistoryAdapter extends RecyclerView.Adapter<TicketHistoryAdap
 
         // Button actions
         holder.btnViewDetails.setOnClickListener(v -> {
-            // TODO: Implement TicketDetailsActivity
-            Toast.makeText(context, "Xem chi tiết vé: " + booking.getBookingCode(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, TicketActivity.class);
+            intent.putExtra("BOOKING_ID", booking.getId());
+            intent.putExtra("CITY_START", booking.getStartCity());
+            intent.putExtra("CITY_END", booking.getEndCity());
+            intent.putExtra("TOTAL_PRICE", booking.getTotalPrice());
+            intent.putExtra("BOOKING_CODE", booking.getBookingCode());
+            // Convert seatNames List to a comma-separated String
+            intent.putExtra("SEAT", String.join(", ", booking.getSeatNames()));
+            intent.putExtra("TIME", booking.getDepartureTime());
+            intent.putExtra("ARRIVAL_TIME", booking.getArrivalTime());
+            intent.putExtra("PICKUP", booking.getStartCity());
+            intent.putExtra("DROPOFF", booking.getEndCity());
+            intent.putExtra("PAYMENT_STATUS", booking.getPaymentStatus()); // Pass paymentStatus
+            context.startActivity(intent);
         });
 
         // Show/hide review button

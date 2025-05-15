@@ -12,11 +12,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,6 +71,7 @@ public class TicketActivity extends AppCompatActivity {
         TextView tvPrice = findViewById(R.id.tvPrice);
         TextView tvSeatNumber = findViewById(R.id.tvSeatNumber);
         TextView tvDepartureTime = findViewById(R.id.tvDepartureTime);
+        TextView tvArrivalTime = findViewById(R.id.tvArrivalTime);
         TextView tvPassengerName = findViewById(R.id.tvPassengerName);
 
         setSupportActionBar(toolbar);
@@ -84,8 +87,10 @@ public class TicketActivity extends AppCompatActivity {
         String bookingCode = intent.getStringExtra("BOOKING_CODE");
         String seat = intent.getStringExtra("SEAT");
         String departureTime = intent.getStringExtra("TIME");
+        String arrivalTime = intent.getStringExtra("ARRIVAL_TIME");
         String pickup = intent.getStringExtra("PICKUP");
         String dropoff = intent.getStringExtra("DROPOFF");
+        String paymentStatus = intent.getStringExtra("PAYMENT_STATUS");
 
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", "");
@@ -98,24 +103,10 @@ public class TicketActivity extends AppCompatActivity {
         Log.d("TicketActivity", "Seat: " + seat);
         Log.d("TicketActivity", "Departure Time: " + departureTime);
         Log.d("TicketActivity", "Username: " + username);
+        Log.d("TicketActivity", "paymentstatus: " + paymentStatus);
 
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(totalPrice);
-
-        String formattedDepartureTime = "N/A";
-        if (departureTime != null) {
-            try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
-                Date date = inputFormat.parse(departureTime);
-                if (date != null) {
-                    formattedDepartureTime = outputFormat.format(date);
-                }
-            } catch (ParseException e) {
-                Log.e("TicketActivity", "Error parsing departure time: " + e.getMessage());
-                formattedDepartureTime = departureTime;
-            }
-        }
 
         // Set data to TextViews
         tvBookingId.setText(bookingCode != null ? bookingCode : "N/A");
@@ -123,11 +114,20 @@ public class TicketActivity extends AppCompatActivity {
         tvArrivalPlace.setText(dropoff != null ? dropoff : "N/A");
         tvPrice.setText(formattedPrice);
         tvSeatNumber.setText(seat != null ? seat : "N/A");
-        tvDepartureTime.setText(formattedDepartureTime);
+        tvDepartureTime.setText(convertDateToString(departureTime));
+        tvArrivalTime.setText(convertDateToString(arrivalTime));
         tvPassengerName.setText(username);
         if (tvStatus != null) {
             tvStatus.setText("Trạng thái: Chưa thanh toán");
         }
+
+        CardView cardTicket = findViewById(R.id.cardQrCode);
+        LinearLayout cardQrCode = findViewById(R.id.operation);
+        if (paymentStatus != null && !"PENDING".equals(paymentStatus)) {
+            cardTicket.setVisibility(View.GONE);
+            cardQrCode.setVisibility(View.GONE);
+        }
+
 
         loadBanksFromApi();
 
@@ -177,6 +177,23 @@ public class TicketActivity extends AppCompatActivity {
 
         // Handle deep link
         handleDeepLink(intent);
+    }
+
+    private String convertDateToString(String dateInput) {
+        if (dateInput != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+                Date date = inputFormat.parse(dateInput);
+                if (date != null) {
+                    return outputFormat.format(date);
+                }
+            } catch (ParseException e) {
+                Log.e("TicketActivity", "Error parsing departure time: " + e.getMessage());
+                return dateInput;
+            }
+        }
+        return "N/A";
     }
 
     @Override

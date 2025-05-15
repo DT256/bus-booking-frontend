@@ -20,17 +20,20 @@ import java.util.stream.Collectors;
 
 public class BookingListFragment extends Fragment {
     private static final String TAG = "BookingListFragment";
-    private static final String ARG_STATUS = "status";
+    private static final String ARG_FILTER_VALUE = "filter_value";
+    private static final String ARG_FILTER_FIELD = "filter_field";
     private FragmentBookingListBinding binding;
     private TicketHistoryAdapter adapter;
     private TicketHistoryViewModel viewModel;
     private List<Booking> allBookings = new ArrayList<>();
-    private String status;
+    private String filterValue;
+    private String filterField;
 
-    public static BookingListFragment newInstance(String status) {
+    public static BookingListFragment newInstance(String filterValue, String filterField) {
         BookingListFragment fragment = new BookingListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_STATUS, status);
+        args.putString(ARG_FILTER_VALUE, filterValue);
+        args.putString(ARG_FILTER_FIELD, filterField);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,10 +42,10 @@ public class BookingListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            status = getArguments().getString(ARG_STATUS);
-            Log.d(TAG, "Fragment created for status: " + status);
+            filterValue = getArguments().getString(ARG_FILTER_VALUE);
+            filterField = getArguments().getString(ARG_FILTER_FIELD);
+            Log.d(TAG, "Fragment created for filter: " + filterField + "=" + filterValue);
         }
-        // Initialize ViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(TicketHistoryViewModel.class);
     }
 
@@ -64,23 +67,28 @@ public class BookingListFragment extends Fragment {
         adapter = new TicketHistoryAdapter(requireContext(), new ArrayList<>());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
-        Log.d(TAG, "RecyclerView set up for status: " + status);
+        Log.d(TAG, "RecyclerView set up for filter: " + filterField + "=" + filterValue);
     }
 
     private void setupObservers() {
-        // Observe bookings from ViewModel
         viewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
             allBookings = bookings != null ? bookings : new ArrayList<>();
-            Log.d(TAG, "Updating bookings for status " + status + ": " + allBookings.size() + " total bookings");
+            Log.d(TAG, "Updating bookings for filter " + filterField + "=" + filterValue + ": " + allBookings.size() + " total bookings");
             filterBookings();
         });
     }
 
     private void filterBookings() {
         List<Booking> filteredBookings = allBookings.stream()
-                .filter(booking -> status.equalsIgnoreCase(booking.getStatus()))
+                .filter(booking -> {
+                    if ("paymentStatus".equals(filterField)) {
+                        return filterValue.equalsIgnoreCase(booking.getPaymentStatus());
+                    } else {
+                        return filterValue.equalsIgnoreCase(booking.getStatus());
+                    }
+                })
                 .collect(Collectors.toList());
-        Log.d(TAG, "Filtered bookings for status " + status + ": " + filteredBookings.size());
+        Log.d(TAG, "Filtered bookings for " + filterField + "=" + filterValue + ": " + filteredBookings.size());
         adapter.updateData(filteredBookings);
     }
 
@@ -88,6 +96,6 @@ public class BookingListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        Log.d(TAG, "Fragment destroyed for status: " + status);
+        Log.d(TAG, "Fragment destroyed for filter: " + filterField + "=" + filterValue);
     }
 }

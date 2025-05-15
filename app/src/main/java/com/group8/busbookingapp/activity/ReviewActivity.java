@@ -237,7 +237,7 @@ public class ReviewActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse<ReviewResponse>> call, Response<ApiResponse<ReviewResponse>> response) {
                 Log.d(TAG, "Response: " + response.toString());
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(ReviewActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReviewActivity.this, "Đánh giá thành công", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     String errorMessage = "Gửi đánh giá thất bại";
