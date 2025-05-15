@@ -22,6 +22,7 @@ import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,6 +96,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (loginData != null) {
                         String jwt = loginData.getJwt();
                         String username = loginData.getUsername();
+                        String avatarUrl = loginData.getAvatarUrl();
+                        String phoneNumber=loginData.getPhoneNumber();
+                        String gender = loginData.getGender();
+                        LocalDateTime dateOfBirth = loginData.getDateOfBirth();
                         String message = loginData.getMessage();
 
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -103,6 +108,10 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         sharedPreferences.edit().putString("token", jwt).apply();
                         sharedPreferences.edit().putString("username", username).apply();
+                        sharedPreferences.edit().putString("avatarUrl", avatarUrl).apply();
+                        sharedPreferences.edit().putString("phoneNumber", phoneNumber).apply();
+                        sharedPreferences.edit().putString("gender", gender).apply();
+                        sharedPreferences.edit().putString("dateOfBirth", dateOfBirth.toString()).apply();
 
                         // Chuyển qua SearchActivity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);

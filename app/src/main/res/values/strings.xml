@@ -8,7 +8,7 @@
     <string name="cancel_ticket">Hủy vé</string>
 
     <!-- Trạng thái vé -->
-    <string name="confirmed">Đã xác nhận</string>
+    <string name="confirmed">Chưa thanh toán</string>
 
     <!-- Thông tin công ty xe -->
     <string name="bus_company_logo">Logo công ty xe buýt</string>

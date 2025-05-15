@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,8 +44,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,6 +71,20 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticketinfo);
         autoCompleteBanks = findViewById(R.id.autoCompleteBanks);
         btnPayTicket = findViewById(R.id.btnPayTicket);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        TextView tvBookingId = findViewById(R.id.tvBookingId);
+        TextView tvDeparturePlace = findViewById(R.id.tvDeparturePlace);
+        TextView tvArrivalPlace = findViewById(R.id.tvArrivalPlace);
+        TextView tvPrice = findViewById(R.id.tvPrice);
+        TextView tvSeatNumber = findViewById(R.id.tvSeatNumber);
+        TextView tvDepartureTime = findViewById(R.id.tvDepartureTime);
+        TextView tvPassengerName = findViewById(R.id.tvPassengerName);
+
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         Intent intent = getIntent();
         String bookingId = intent.getStringExtra("BOOKING_ID");
@@ -84,6 +107,33 @@ public class TicketActivity extends AppCompatActivity {
         Log.d("TicketActivity", "Departure Time: " + departureTime);
         Log.d("TicketActivity", "Username: " + username);
 
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedPrice = currencyFormat.format(totalPrice);
+
+        String formattedDepartureTime = "N/A";
+        if (departureTime != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+                Date date = inputFormat.parse(departureTime);
+                if (date != null) {
+                    formattedDepartureTime = outputFormat.format(date);
+                }
+            } catch (ParseException e) {
+                Log.e("TicketActivity", "Error parsing departure time: " + e.getMessage());
+                formattedDepartureTime = departureTime; // Fallback to raw string if parsing fails
+            }
+        }
+
+        // Set data to TextViews
+        tvBookingId.setText(bookingCode != null ? bookingCode : "N/A");
+        tvDeparturePlace.setText(cityStart != null ? cityStart : "N/A");
+        tvArrivalPlace.setText(cityEnd != null ? cityEnd : "N/A");
+        tvPrice.setText(formattedPrice);
+        tvSeatNumber.setText(seat != null ? seat : "N/A");
+        tvDepartureTime.setText(formattedDepartureTime);
+        tvPassengerName.setText(username);
+
         loadBanksFromApi();
 
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
@@ -104,11 +154,9 @@ public class TicketActivity extends AppCompatActivity {
                 return;
             }
 
-            int amount = 1000000;
-            String orderId = "682014b9079efb094fbee2e6";
             String baseUrl = ApiClient.getClient().baseUrl().toString();
 
-            Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(amount, selectedBank.getCode(), orderId, baseUrl);
+            Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(totalPrice, selectedBank.getCode(), bookingId, baseUrl);
             call.enqueue(new Callback<ApiResponse<PaymentDTO>>() {
                 @Override
                 public void onResponse(Call<ApiResponse<PaymentDTO>> call, Response<ApiResponse<PaymentDTO>> response) {
