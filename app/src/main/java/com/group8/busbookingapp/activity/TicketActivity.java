@@ -2,7 +2,6 @@ package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,24 +12,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.common.BitMatrix;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.adapter.BankAdapter;
 import com.group8.busbookingapp.dto.ApiResponse;
@@ -38,7 +29,6 @@ import com.group8.busbookingapp.dto.Bank;
 import com.group8.busbookingapp.dto.PaymentDTO;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
-import com.group8.busbookingapp.viewmodel.TicketHistoryViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +39,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -58,13 +47,12 @@ import retrofit2.Response;
 
 public class TicketActivity extends AppCompatActivity {
 
-
     AutoCompleteTextView autoCompleteBanks;
     ArrayList<Bank> bankList = new ArrayList<>();
     BankAdapter bankAdapter;
-    ImageView imageViewQrCode;
     Button btnPayTicket;
     ImageButton btnBack, btnHome;
+    TextView tvStatus; // For payment status
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +60,9 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticketinfo);
         autoCompleteBanks = findViewById(R.id.autoCompleteBanks);
         btnPayTicket = findViewById(R.id.btnPayTicket);
-        btnBack = findViewById(R.id.btn_back);
+        btnBack = findViewById(R.id.btnBack);
         btnHome = findViewById(R.id.btnHome);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageButton btnBack = findViewById(R.id.btnBack);
         TextView tvBookingId = findViewById(R.id.tvBookingId);
         TextView tvDeparturePlace = findViewById(R.id.tvDeparturePlace);
         TextView tvArrivalPlace = findViewById(R.id.tvArrivalPlace);
@@ -93,7 +80,7 @@ public class TicketActivity extends AppCompatActivity {
         String bookingId = intent.getStringExtra("BOOKING_ID");
         String cityStart = intent.getStringExtra("CITY_START");
         String cityEnd = intent.getStringExtra("CITY_END");
-        int totalPrice = intent.getIntExtra("TOTAL_PRICE", 0); // Note: You used CITY_START for totalPrice, corrected here
+        int totalPrice = intent.getIntExtra("TOTAL_PRICE", 0);
         String bookingCode = intent.getStringExtra("BOOKING_CODE");
         String seat = intent.getStringExtra("SEAT");
         String departureTime = intent.getStringExtra("TIME");
@@ -102,7 +89,6 @@ public class TicketActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", "");
-
 
         Log.d("TicketActivity", "Booking ID: " + bookingId);
         Log.d("TicketActivity", "City Start: " + cityStart);
@@ -127,7 +113,7 @@ public class TicketActivity extends AppCompatActivity {
                 }
             } catch (ParseException e) {
                 Log.e("TicketActivity", "Error parsing departure time: " + e.getMessage());
-                formattedDepartureTime = departureTime; // Fallback to raw string if parsing fails
+                formattedDepartureTime = departureTime;
             }
         }
 
@@ -139,6 +125,9 @@ public class TicketActivity extends AppCompatActivity {
         tvSeatNumber.setText(seat != null ? seat : "N/A");
         tvDepartureTime.setText(formattedDepartureTime);
         tvPassengerName.setText(username);
+        if (tvStatus != null) {
+            tvStatus.setText("Trạng thái: Chưa thanh toán");
+        }
 
         loadBanksFromApi();
 
@@ -160,16 +149,12 @@ public class TicketActivity extends AppCompatActivity {
                     break;
                 }
             }
-            Log.d("dsfjkhf", "onCreate: " + autoCompleteBanks.getText().toString());
-            Log.d("dsfjkhf", "onCreate: " + bankList.toString());
-            Log.d("dsfjkhf", "onCreate: " + bankList.size());
             if (selectedBank == null) {
                 Toast.makeText(this, "Vui lòng chọn ngân hàng hợp lệ", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             String baseUrl = ApiClient.getClient().baseUrl().toString();
-
             Call<ApiResponse<PaymentDTO>> call = apiService.createVnPayPayment(totalPrice, selectedBank.getCode(), bookingId, baseUrl);
             call.enqueue(new Callback<ApiResponse<PaymentDTO>>() {
                 @Override
@@ -189,6 +174,52 @@ public class TicketActivity extends AppCompatActivity {
                 }
             });
         });
+
+        // Handle deep link
+        handleDeepLink(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLink(intent);
+    }
+
+    private void handleDeepLink(Intent intent) {
+        Uri uri = intent.getData();
+        if (uri != null) {
+            String bookingId = uri.getQueryParameter("bookingId");
+            String status = uri.getQueryParameter("status");
+            if (bookingId != null && status != null) {
+                Log.d("TicketActivity", "Deep Link - Booking ID: " + bookingId + ", Status: " + status);
+                if ("success".equalsIgnoreCase(status)) {
+                    Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+                    updateUIForSuccess();
+                } else {
+                    Toast.makeText(this, "Thanh toán thất bại hoặc bị hủy.", Toast.LENGTH_SHORT).show();
+                    if (tvStatus != null) {
+                        tvStatus.setText("Trạng thái: Chưa thanh toán");
+                    }
+                    btnPayTicket.setEnabled(true);
+                    btnPayTicket.setText("Thanh Toán");
+                }
+            }
+        }
+    }
+
+    private void updateUIForSuccess() {
+        btnPayTicket.setEnabled(false);
+        btnPayTicket.setText("Đã Thanh Toán");
+        if (tvStatus != null) {
+            tvStatus.setText("Trạng thái: Đã thanh toán");
+        }
+
+        // Redirect to MainActivity with navigation_tickets fragment
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("SELECTED_FRAGMENT", R.id.navigation_tickets); // Pass the fragment ID
+        startActivity(intent);
+        finish(); // Close TicketActivity
     }
 
     @Override
@@ -200,7 +231,6 @@ public class TicketActivity extends AppCompatActivity {
                 v.getGlobalVisibleRect(outRect);
                 if (!outRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
                     v.clearFocus();
-                    // Ẩn bàn phím
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     if (imm != null) {
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -234,17 +264,12 @@ public class TicketActivity extends AppCompatActivity {
                         autoCompleteBanks.setThreshold(1);
                         autoCompleteBanks.setOnClickListener(v -> autoCompleteBanks.showDropDown());
 
-
                         autoCompleteBanks.setOnItemClickListener((parent, view, position, id) -> {
                             Bank selectedBank = (Bank) parent.getItemAtPosition(position);
-
-
                             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                             if (imm != null) {
                                 imm.hideSoftInputFromWindow(autoCompleteBanks.getWindowToken(), 0);
                             }
-
-
                             autoCompleteBanks.clearFocus();
                         });
 

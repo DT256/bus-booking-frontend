@@ -38,11 +38,17 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name=".activity.TicketActivity"
+        <activity android:name=".activity.TicketActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-
+                <data
+                    android:scheme="yourapp"
+                    android:host="ticket" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"

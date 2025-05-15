@@ -1,9 +1,7 @@
 package com.group8.busbookingapp.activity;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -12,8 +10,6 @@ import com.group8.busbookingapp.fragment.ProfileFragment;
 import com.group8.busbookingapp.fragment.SearchFragment;
 import com.group8.busbookingapp.fragment.TicketHistoryFragment;
 import com.group8.busbookingapp.fragment.ChatFragment;
-
-import java.time.LocalDateTime;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -40,20 +36,24 @@ public class MainActivity extends AppCompatActivity {
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment)
-                    .commit();
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
                 return true;
             }
             return false;
         });
 
-        // Set default fragment
-        if (savedInstanceState == null) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-        }
+        // Check for intent extra to select a specific fragment
+        Intent intent = getIntent();
+        int selectedFragmentId = intent.getIntExtra("SELECTED_FRAGMENT", R.id.navigation_search);
+        bottomNavigationView.setSelectedItemId(selectedFragmentId);
+    }
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        String jwtToken = sharedPreferences.getString("token", null);
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        int selectedFragmentId = intent.getIntExtra("SELECTED_FRAGMENT", R.id.navigation_search);
+        bottomNavigationView.setSelectedItemId(selectedFragmentId);
     }
 }
