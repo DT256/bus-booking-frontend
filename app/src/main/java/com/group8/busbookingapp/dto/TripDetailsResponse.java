@@ -9,6 +9,7 @@ public class TripDetailsResponse {
     private String startPointCity;
     private String endPointCity;
     private String departureTime;
+    private String arrivalTime;
     private double price;
     private int capacity;
     private String busType;
@@ -85,6 +86,14 @@ public class TripDetailsResponse {
 
     public void setStopPoints(List<StopPoint> stopPoints) {
         this.stopPoints = stopPoints;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }
 
