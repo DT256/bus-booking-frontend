@@ -94,6 +94,9 @@ public class TicketActivity extends AppCompatActivity {
         String bookingCode = intent.getStringExtra("BOOKING_CODE");
         String seat = intent.getStringExtra("SEAT");
         String departureTime = intent.getStringExtra("TIME");
+        String pickup = intent.getStringExtra("PICKUP");
+        String dropoff = intent.getStringExtra("DROPOFF");
+
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", "");
 
@@ -127,8 +130,8 @@ public class TicketActivity extends AppCompatActivity {
 
         // Set data to TextViews
         tvBookingId.setText(bookingCode != null ? bookingCode : "N/A");
-        tvDeparturePlace.setText(cityStart != null ? cityStart : "N/A");
-        tvArrivalPlace.setText(cityEnd != null ? cityEnd : "N/A");
+        tvDeparturePlace.setText(pickup != null ? pickup : "N/A");
+        tvArrivalPlace.setText(dropoff != null ? dropoff : "N/A");
         tvPrice.setText(formattedPrice);
         tvSeatNumber.setText(seat != null ? seat : "N/A");
         tvDepartureTime.setText(formattedDepartureTime);

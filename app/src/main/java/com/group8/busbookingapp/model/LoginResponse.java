@@ -1,7 +1,5 @@
 package com.group8.busbookingapp.model;
 
-import java.time.LocalDateTime;
-
 public class LoginResponse {
     private String jwt;
     private String message;

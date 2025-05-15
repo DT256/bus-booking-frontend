@@ -3,7 +3,6 @@ package com.group8.busbookingapp.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +21,6 @@ import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
 
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 
 import retrofit2.Call;
 import retrofit2.Callback;
