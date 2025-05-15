@@ -1,7 +1,5 @@
 package com.group8.busbookingapp.model;
 
-import java.time.LocalDateTime;
-
 public class LoginResponse {
     private String jwt;
     private String message;
@@ -11,7 +9,7 @@ public class LoginResponse {
     private String avatarUrl;
     private String phoneNumber;
     private String gender;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     public String getJwt() {
         return jwt;
     }
@@ -36,7 +34,7 @@ public class LoginResponse {
         return gender;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 }

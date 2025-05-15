@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.adapter.StopPointAdapter;
 import com.group8.busbookingapp.dto.ApiResponse;
@@ -19,8 +21,10 @@ import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.model.StopPoint;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,6 +91,8 @@ public class SelectStopPointsActivity extends AppCompatActivity {
                 intent.putExtra("TRIP_ID", tripId);
                 intent.putExtra("ROUTE_NAME", tvRouteName.getText().toString());
                 intent.putExtra("DATE_TIME", tvDateTime.getText().toString());
+                intent.putExtra("ARRIVAL_TIME", getIntent().getStringExtra("ARRIVAL_TIME"));
+                Log.d(TAG, "onCreate: " + getIntent().getStringExtra("ARRIVAL_TIME"));
                 intent.putExtra("PICKUP_POINT_ID", selectedPickupPoint.getId());
                 intent.putExtra("DROPOFF_POINT_ID", selectedDropoffPoint.getId());
                 intent.putExtra("PICKUP_ADDRESS", selectedPickupPoint.getName());

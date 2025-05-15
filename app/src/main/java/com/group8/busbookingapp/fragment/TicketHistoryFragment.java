@@ -1,5 +1,7 @@
 package com.group8.busbookingapp.fragment;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.group8.busbookingapp.R;
+import com.group8.busbookingapp.activity.LoginActivity;
 import com.group8.busbookingapp.adapter.BookingPagerAdapter;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.model.Booking;
@@ -89,9 +92,21 @@ public class TicketHistoryFragment extends Fragment {
 
     private void fetchBookingHistory() {
         viewModel.setLoading(true);
+//        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyAppPrefs", 0);
-        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
+        String jwtToken = sharedPreferences.getString("token", null);
 
+        if (jwtToken == null) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Yêu cầu đăng nhập")
+                    .setMessage(R.string.please_login)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        startActivity(new Intent(getContext(), LoginActivity.class));
+                    })
+                    .setCancelable(false)
+                    .show();
+            return;
+        }
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<List<Booking>>> call = apiService.getBookingHistory("Bearer " + jwtToken);
         call.enqueue(new Callback<ApiResponse<List<Booking>>>() {

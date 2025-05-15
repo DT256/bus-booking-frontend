@@ -1,5 +1,6 @@
 package com.group8.busbookingapp.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.Chip;
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.adapter.ChatAdapter;
@@ -102,8 +105,11 @@ public class ChatFragment extends Fragment {
         updateChatDisplay();
 
         // Get auth token
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
-        if (token == null) {
+//        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyAppPrefs", 0);
+        String jwtToken = sharedPreferences.getString("token", null);
+
+        if (jwtToken == null) {
             // Handle unauthenticated state
             ChatMessage errorMessage = new ChatMessage("assistant",
                     "Vui lòng đăng nhập để sử dụng tính năng này.");
@@ -113,7 +119,7 @@ public class ChatFragment extends Fragment {
         }
 
         // Send to API and get response
-        apiService.sendChatMessage("Bearer " + token, userMessage).enqueue(new Callback<ChatMessage>() {
+        apiService.sendChatMessage("Bearer " + jwtToken, userMessage).enqueue(new Callback<ChatMessage>() {
             @Override
             public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
                 if (response.isSuccessful() && response.body() != null) {

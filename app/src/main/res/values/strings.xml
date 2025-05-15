@@ -45,7 +45,7 @@
     <string name="no_booking_history">Bạn chưa có lịch sử đặt vé nào</string>
     <string name="book_ticket">Đặt vé ngay</string>
     <string name="navigate_to_booking">Điều hướng đến màn hình đặt vé</string>
-    <string name="please_login">Vui lòng đăng nhập lại</string>
+    <string name="please_login">Vui lòng đăng nhập</string>
     <string name="network_error">Không thể kết nối đến máy chủ</string>
     <string name="completed">Hoàn thành</string>
     <string name="cancelled">Đã hủy</string>

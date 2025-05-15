@@ -2,27 +2,30 @@ package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+
 import com.group8.busbookingapp.R;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.Seat;
 import com.group8.busbookingapp.dto.TripDetailsResponse;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +41,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private List<String> selectedSeatIds = new ArrayList<>();
     private List<String> selectedSeatNumbers = new ArrayList<>();
     private double pricePerSeat;
-    private String tripId;
+    private String tripId, arrivalTime;
     private View loadingView;
 
     @Override
@@ -143,6 +146,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         }
         tvBusType.setText("Giường nằm " + trip.getCapacity() + " chỗ");
         pricePerSeat = trip.getPrice();
+        arrivalTime = trip.getArrivalTime();
 
         initializeSeatViews(trip.getSeats(), trip.getCapacity());
     }
@@ -256,6 +260,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         intent.putExtra("TRIP_ID", tripId);
         intent.putExtra("ROUTE_NAME", tvRouteName.getText().toString());
         intent.putExtra("DATE_TIME", tvDateTime.getText().toString());
+        intent.putExtra("ARRIVAL_TIME", arrivalTime);
         intent.putStringArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
         intent.putStringArrayListExtra("SELECTED_SEAT_NUMBER", new ArrayList<>(selectedSeatNumbers));
         intent.putExtra("TOTAL_PRICE", selectedSeatIds.size() * pricePerSeat);
