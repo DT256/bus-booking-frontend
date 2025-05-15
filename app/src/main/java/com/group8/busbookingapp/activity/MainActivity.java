@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.group8.busbookingapp.R;
+import com.group8.busbookingapp.fragment.ProfileFragment;
 import com.group8.busbookingapp.fragment.SearchFragment;
 import com.group8.busbookingapp.fragment.TicketHistoryFragment;
 import com.group8.busbookingapp.fragment.ChatFragment;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new TicketHistoryFragment();
             } else if (itemId == R.id.navigation_chat) {
                 selectedFragment = new ChatFragment();
+            } else if (itemId == R.id.navigation_profile) {
+                selectedFragment = new ProfileFragment();
             }
 
             if (selectedFragment != null) {

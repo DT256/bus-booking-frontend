@@ -72,15 +72,15 @@ public class TicketHistoryActivity extends AppCompatActivity {
     private void fetchBookingHistory() {
         viewModel.setLoading(true);
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-//        String jwtToken = sharedPreferences.getString("token", null);
-//
-//        if (jwtToken == null) {
-//            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-//            startActivity(new Intent(this, LoginActivity.class)); // Assumes LoginActivity exists
-//            finish();
-//            return;
-//        }
-        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
+        String jwtToken = sharedPreferences.getString("token", null);
+
+        if (jwtToken == null) {
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class)); // Assumes LoginActivity exists
+            finish();
+            return;
+        }
+//        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0NjI4NTU1NCwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.Y90T0XlbNqO8PheqTHkZFN2y2NE5umSkTymXq-Iv2FHI2-hMuGDLTavTtIev4ZoZ8akzhzvK4uFPuoHD5NK53w";
 
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<List<Booking>>> call = apiService.getBookingHistory("Bearer " + jwtToken);
