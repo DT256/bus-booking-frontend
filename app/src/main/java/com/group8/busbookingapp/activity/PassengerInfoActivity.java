@@ -34,7 +34,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
     private Button btnConfirm;
     private ImageButton btnBack;
     private Toolbar toolbar;
-    private String tripId, pickupPointId, dropoffPointId;
+    private String tripId, pickupPointId, dropoffPointId, arrivalTime;
     private ArrayList<String> selectedSeatIds, selectedSeatNumber;
     private BigDecimal totalPrice;
     private View loadingView;
@@ -74,6 +74,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
         totalPrice = BigDecimal.valueOf(totalPriceDouble);
         String routeName = getIntent().getStringExtra("ROUTE_NAME");
         String dateTime = getIntent().getStringExtra("DATE_TIME");
+        arrivalTime = getIntent().getStringExtra("ARRIVAL_TIME");
         String pickupAddress = getIntent().getStringExtra("PICKUP_ADDRESS");
         String dropoffAddress = getIntent().getStringExtra("DROPOFF_ADDRESS");
 
@@ -169,6 +170,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
                     intent.putExtra("BOOKING_CODE",response.body().getData().getBookingCode());
                     intent.putExtra("SEAT",String.join(", ", selectedSeatNumber));
                     intent.putExtra("TIME",response.body().getData().getDepartureTime());
+                    intent.putExtra("ARRIVAL_TIME", arrivalTime);
 
                     startActivity(intent);
                     finish();

@@ -11,7 +11,7 @@ public class LoginResponse {
     private String avatarUrl;
     private String phoneNumber;
     private String gender;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     public String getJwt() {
         return jwt;
     }
@@ -36,7 +36,7 @@ public class LoginResponse {
         return gender;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 }

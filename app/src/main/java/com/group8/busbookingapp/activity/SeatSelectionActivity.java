@@ -38,7 +38,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
     private List<String> selectedSeatIds = new ArrayList<>();
     private List<String> selectedSeatNumbers = new ArrayList<>();
     private double pricePerSeat;
-    private String tripId;
+    private String tripId, arrivalTime;
     private View loadingView;
 
     @Override
@@ -143,6 +143,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         }
         tvBusType.setText("Giường nằm " + trip.getCapacity() + " chỗ");
         pricePerSeat = trip.getPrice();
+        arrivalTime = trip.getArrivalTime();
 
         initializeSeatViews(trip.getSeats(), trip.getCapacity());
     }
@@ -256,6 +257,7 @@ public class SeatSelectionActivity extends AppCompatActivity {
         intent.putExtra("TRIP_ID", tripId);
         intent.putExtra("ROUTE_NAME", tvRouteName.getText().toString());
         intent.putExtra("DATE_TIME", tvDateTime.getText().toString());
+        intent.putExtra("ARRIVAL_TIME", arrivalTime);
         intent.putStringArrayListExtra("SELECTED_SEAT_IDS", new ArrayList<>(selectedSeatIds));
         intent.putStringArrayListExtra("SELECTED_SEAT_NUMBER", new ArrayList<>(selectedSeatNumbers));
         intent.putExtra("TOTAL_PRICE", selectedSeatIds.size() * pricePerSeat);

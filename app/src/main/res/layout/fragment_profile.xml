@@ -49,7 +49,6 @@
             android:padding="16dp">
 
             <!-- CardView: Ảnh đại diện -->
-            <!-- Ảnh đại diện -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -163,26 +162,75 @@
                             android:layout_marginBottom="8dp">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/edit_email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Email"
-                                android:inputType="textEmailAddress" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_marginBottom="8dp">
-
-                            <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Số điện thoại"
                                 android:inputType="phone" />
                         </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Date of Birth with DatePickerDialog -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edit_dob"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Ngày sinh"
+                                    android:inputType="none"
+                                    android:focusable="false"
+                                    android:clickable="true" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <!-- CheckBox for Gender -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Giới tính"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <CheckBox
+                                android:id="@+id/cb_male"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nam"
+                                android:textSize="14sp" />
+
+                            <CheckBox
+                                android:id="@+id/cb_female"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:text="Nữ"
+                                android:textSize="14sp" />
+
+                            <CheckBox
+                                android:id="@+id/cb_other"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:text="Khác"
+                                android:textSize="14sp" />
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"

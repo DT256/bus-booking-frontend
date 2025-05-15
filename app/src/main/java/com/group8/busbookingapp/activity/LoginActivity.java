@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                         String avatarUrl = loginData.getAvatarUrl();
                         String phoneNumber=loginData.getPhoneNumber();
                         String gender = loginData.getGender();
-                        LocalDateTime dateOfBirth = loginData.getDateOfBirth();
+                        String dateOfBirth = loginData.getDateOfBirth();
                         String message = loginData.getMessage();
 
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();

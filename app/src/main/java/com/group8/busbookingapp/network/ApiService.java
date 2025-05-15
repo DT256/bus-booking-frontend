@@ -2,8 +2,11 @@ package com.group8.busbookingapp.network;
 
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.BookingRequest;
+import com.group8.busbookingapp.dto.ChangePasswordRequest;
 import com.group8.busbookingapp.dto.PaymentDTO;
 import com.group8.busbookingapp.dto.TripDetailsResponse;
+import com.group8.busbookingapp.dto.UpdateUserRequest;
+import com.group8.busbookingapp.dto.UserResponse;
 import com.group8.busbookingapp.model.ChatMessage;
 import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
@@ -108,5 +111,24 @@ public interface ApiService {
     Call<ChatMessage> sendChatMessage(
         @Header("Authorization") String authorization,
         @Body ChatMessage message
+    );
+
+    @Multipart
+    @PUT("api/users/avatar")
+    Call<ApiResponse<UserResponse>> updateAvatar(
+            @Header("Authorization") String authorization,
+            @Part MultipartBody.Part avatar
+    );
+
+    @PUT("api/users/personal-info")
+    Call<ApiResponse<UserResponse>> updatePersonalInfo(
+            @Header("Authorization") String authorization,
+            @Body UpdateUserRequest request
+    );
+
+    @PUT("api/users/change-password")
+    Call<ApiResponse<String>> changePassword(
+            @Header("Authorization") String authorization,
+            @Body ChangePasswordRequest request
     );
 }
