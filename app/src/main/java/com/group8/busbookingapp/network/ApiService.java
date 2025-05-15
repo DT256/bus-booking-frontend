@@ -12,6 +12,7 @@ import com.group8.busbookingapp.model.Register;
 import com.group8.busbookingapp.model.RegisterResponse;
 import com.group8.busbookingapp.model.ReviewResponse;
 import com.group8.busbookingapp.model.Trip;
+import com.group8.busbookingapp.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,23 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Header;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    @GET("/api/users/profile")
+    Call<ApiResponse<User>>getProfile(@Header("Authorization") String token);
+
+    @Multipart
+    @PUT("/api/users")
+    Call<ApiResponse<User>> updateProfile(
+            @Header("Authorization") String authorization,
+            @Part("data") RequestBody data,
+            @Part MultipartBody.Part images
+    );
+
     @GET("/api/payments/vn-pay")
     Call<ApiResponse<PaymentDTO>> createVnPayPayment(
             @Query("amount") int amount,

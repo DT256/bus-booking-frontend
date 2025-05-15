@@ -1,6 +1,7 @@
 package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -61,6 +62,27 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticketinfo);
         autoCompleteBanks = findViewById(R.id.autoCompleteBanks);
         btnPayTicket = findViewById(R.id.btnPayTicket);
+
+        Intent intent = getIntent();
+        String bookingId = intent.getStringExtra("BOOKING_ID");
+        String cityStart = intent.getStringExtra("CITY_START");
+        String cityEnd = intent.getStringExtra("CITY_END");
+        int totalPrice = intent.getIntExtra("TOTAL_PRICE", 0); // Note: You used CITY_START for totalPrice, corrected here
+        String bookingCode = intent.getStringExtra("BOOKING_CODE");
+        String seat = intent.getStringExtra("SEAT");
+        String departureTime = intent.getStringExtra("TIME");
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String username = prefs.getString("username", "");
+
+
+        Log.d("TicketActivity", "Booking ID: " + bookingId);
+        Log.d("TicketActivity", "City Start: " + cityStart);
+        Log.d("TicketActivity", "City End: " + cityEnd);
+        Log.d("TicketActivity", "Total Price: " + totalPrice);
+        Log.d("TicketActivity", "Booking Code: " + bookingCode);
+        Log.d("TicketActivity", "Seat: " + seat);
+        Log.d("TicketActivity", "Departure Time: " + departureTime);
+        Log.d("TicketActivity", "Username: " + username);
 
         loadBanksFromApi();
 

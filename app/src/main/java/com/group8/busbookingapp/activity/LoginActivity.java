@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     LoginResponse loginData = apiResponse.getData();
                     if (loginData != null) {
                         String jwt = loginData.getJwt();
+                        String username = loginData.getUsername();
                         String message = loginData.getMessage();
 
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -101,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Lưu token
                         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         sharedPreferences.edit().putString("token", jwt).apply();
+                        sharedPreferences.edit().putString("username", username).apply();
 
                         // Chuyển qua SearchActivity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);

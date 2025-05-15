@@ -1,5 +1,6 @@
 package com.group8.busbookingapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -147,14 +148,19 @@ public class PassengerInfoActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: " + response);
                 Log.d(TAG, "onResponse: " + response.body());
                 Log.d(TAG, "onResponse: " + response.isSuccessful());
-                Log.d(TAG, "onResponse: " + response.body().getStatus());
 
                 if (response.isSuccessful() && response.body() != null && response.body().getStatus().equals("success")) {
                     Toast.makeText(PassengerInfoActivity.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(PassengerInfoActivity.this, BookingConfirmationActivity.class);
-//                    intent.putExtra("BOOKING_ID", response.body().getData().getId());
-//                    startActivity(intent);
-//                    finish();
+                    Intent intent = new Intent(PassengerInfoActivity.this, TicketActivity.class);
+                    intent.putExtra("BOOKING_ID", response.body().getData().getId());
+                    intent.putExtra("CITY_START",response.body().getData().getStartCity());
+                    intent.putExtra("CITY_END",response.body().getData().getEndCity());
+                    intent.putExtra("TOTAL_PRICE",response.body().getData().getTotalPrice());
+                    intent.putExtra("BOOKING_CODE",response.body().getData().getBookingCode());
+                    intent.putExtra("SEAT",String.join(", ", selectedSeatNumber));
+                    intent.putExtra("TIME",response.body().getData().getDepartureTime());
+                    startActivity(intent);
+                    finish();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Unknown error";
                     Toast.makeText(PassengerInfoActivity.this, "Đặt vé thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();
