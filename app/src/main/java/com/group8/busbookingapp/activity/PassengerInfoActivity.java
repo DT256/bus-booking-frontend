@@ -144,7 +144,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
 
         if (jwtToken == null) {
             Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class)); // Assumes LoginActivity exists
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
@@ -169,6 +169,8 @@ public class PassengerInfoActivity extends AppCompatActivity {
                     intent.putExtra("BOOKING_CODE",response.body().getData().getBookingCode());
                     intent.putExtra("SEAT",String.join(", ", selectedSeatNumber));
                     intent.putExtra("TIME",response.body().getData().getDepartureTime());
+                    intent.putExtra("PICKUP",getIntent().getStringExtra("PICKUP_ADDRESS"));
+                    intent.putExtra("DROPOFF",getIntent().getStringExtra("DROPOFF_ADDRESS"));
 
                     startActivity(intent);
                     finish();
