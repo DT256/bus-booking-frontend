@@ -2,6 +2,8 @@ package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ public class OTPActivity extends AppCompatActivity {
         etOtp5 = findViewById(R.id.etOtp5);
         etOtp6 = findViewById(R.id.etOtp6);
         btnVerify = findViewById(R.id.btnVerify);
+        setupOtpInputs();
 
         String email = getIntent().getStringExtra("email");
         String purpose = getIntent().getStringExtra("purpose");
@@ -113,5 +116,29 @@ public class OTPActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+    private void setupOtpInputs() {
+        EditText[] otpInputs = new EditText[]{etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6};
+
+        for (int i = 0; i < otpInputs.length; i++) {
+            final int index = i;
+
+            otpInputs[i].addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].requestFocus();
+                    } else if (s.length() == 0 && index > 0) {
+                        otpInputs[index - 1].requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) { }
+            });
+        }
     }
 }
