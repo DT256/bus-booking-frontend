@@ -38,6 +38,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.textfield.TextInputEditText;
 import com.group8.busbookingapp.R;
+import com.group8.busbookingapp.activity.LoginActivity;
 import com.group8.busbookingapp.dto.ApiResponse;
 import com.group8.busbookingapp.dto.ChangePasswordRequest;
 import com.group8.busbookingapp.dto.UpdateUserRequest;
@@ -231,6 +232,8 @@ public class ProfileFragment extends Fragment {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear().apply();
             Toast.makeText(getContext(), "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
         });
 
         return view;

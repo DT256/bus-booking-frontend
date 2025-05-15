@@ -8,9 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.group8.busbookingapp.R;
@@ -19,9 +17,7 @@ import com.group8.busbookingapp.model.Login;
 import com.group8.busbookingapp.model.LoginResponse;
 import com.group8.busbookingapp.network.ApiClient;
 import com.group8.busbookingapp.network.ApiService;
-
 import java.lang.reflect.Type;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,21 +43,14 @@ public class LoginActivity extends AppCompatActivity {
 
         showLoading(false);
 
-
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
 
-        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
+        tvForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
         });
 
         btnLogin.setOnClickListener(v -> {
@@ -78,13 +67,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     private void loginUser(String email, String password) {
         showLoading(true);
-        ApiService ApiService = ApiClient.getClient().create(ApiService.class);
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Login request = new Login(email, password);
 
-        ApiService.login(request).enqueue(new Callback<ApiResponse<LoginResponse>>() {
+        apiService.login(request).enqueue(new Callback<ApiResponse<LoginResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<LoginResponse>> call, Response<ApiResponse<LoginResponse>> response) {
                 showLoading(false);
@@ -95,42 +83,44 @@ public class LoginActivity extends AppCompatActivity {
                         String jwt = loginData.getJwt();
                         String username = loginData.getUsername();
                         String avatarUrl = loginData.getAvatarUrl();
-                        String phoneNumber=loginData.getPhoneNumber();
+                        String phoneNumber = loginData.getPhoneNumber();
                         String gender = loginData.getGender();
                         String dateOfBirth = loginData.getDateOfBirth();
                         String message = loginData.getMessage();
 
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                        // Lưu token
+                        // Save token and user info
                         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        sharedPreferences.edit().putString("token", jwt).apply();
-                        sharedPreferences.edit().putString("username", username).apply();
-                        sharedPreferences.edit().putString("avatarUrl", avatarUrl).apply();
-                        sharedPreferences.edit().putString("phoneNumber", phoneNumber).apply();
-                        sharedPreferences.edit().putString("gender", gender).apply();
-                        sharedPreferences.edit().putString("dateOfBirth", dateOfBirth.toString()).apply();
+                        sharedPreferences.edit()
+                                .putString("token", jwt)
+                                .putString("username", username)
+                                .putString("avatarUrl", avatarUrl)
+                                .putString("phoneNumber", phoneNumber)
+                                .putString("gender", gender)
+                                .putString("dateOfBirth", dateOfBirth.toString())
+                                .apply();
 
-                        // Chuyển qua SearchActivity
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        // Check if launched from PassengerInfoActivity
+                        if (getIntent().getBooleanExtra("FROM_BOOKING", false)) {
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Dữ liệu trả về từ server rỗng", Toast.LENGTH_SHORT).show();
                     }
-
                 } else {
                     try {
-                        // Parse lỗi từ response.errorBody()
                         String errorJson = response.errorBody().string();
                         Gson gson = new Gson();
-                        Type type = new TypeToken<ApiResponse<Object>>() {
-                        }.getType();
+                        Type type = new TypeToken<ApiResponse<Object>>() {}.getType();
                         ApiResponse<?> errorResponse = gson.fromJson(errorJson, type);
-
                         String errorMessage = errorResponse.getMessage();
                         Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
@@ -145,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
     private void showLoading(boolean show) {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(show ? View.VISIBLE : View.GONE);

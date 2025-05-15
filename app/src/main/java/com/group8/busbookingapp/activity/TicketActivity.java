@@ -64,6 +64,7 @@ public class TicketActivity extends AppCompatActivity {
     BankAdapter bankAdapter;
     ImageView imageViewQrCode;
     Button btnPayTicket;
+    ImageButton btnBack, btnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,8 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticketinfo);
         autoCompleteBanks = findViewById(R.id.autoCompleteBanks);
         btnPayTicket = findViewById(R.id.btnPayTicket);
+        btnBack = findViewById(R.id.btn_back);
+        btnHome = findViewById(R.id.btnHome);
         Toolbar toolbar = findViewById(R.id.toolbar);
         ImageButton btnBack = findViewById(R.id.btnBack);
         TextView tvBookingId = findViewById(R.id.tvBookingId);
@@ -140,6 +143,14 @@ public class TicketActivity extends AppCompatActivity {
         loadBanksFromApi();
 
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
+
+        btnBack.setOnClickListener(v -> finish());
+
+        btnHome.setOnClickListener(v -> {
+            Intent intentHome = new Intent(this, MainActivity.class);
+            startActivity(intentHome);
+            finish();
+        });
 
         btnPayTicket.setOnClickListener(v -> {
             Bank selectedBank = null;

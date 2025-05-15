@@ -51,5 +51,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_search);
         }
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String jwtToken = sharedPreferences.getString("token", null);
+
     }
 }

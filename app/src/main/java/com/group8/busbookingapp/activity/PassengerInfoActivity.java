@@ -1,5 +1,6 @@
 package com.group8.busbookingapp.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -38,6 +41,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
     private ArrayList<String> selectedSeatIds, selectedSeatNumber;
     private BigDecimal totalPrice;
     private View loadingView;
+    private ActivityResultLauncher<Intent> loginLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,19 @@ public class PassengerInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationOnClickListener(v -> finish());
 
+        // Initialize Activity Result Launcher
+        loginLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Login successful, proceed with booking
+                        submitBooking();
+                    } else {
+                        Toast.makeText(this, "Đăng nhập bị hủy", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+
         tripId = getIntent().getStringExtra("TRIP_ID");
         pickupPointId = getIntent().getStringExtra("PICKUP_POINT_ID");
         dropoffPointId = getIntent().getStringExtra("DROPOFF_POINT_ID");
@@ -84,7 +101,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
         tvDropoffInfo.setText(dropoffAddress != null ? dropoffAddress : "N/A");
 
         // Load saved info if available
-        var prefs = getSharedPreferences("PassengerInfo", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("PassengerInfo", MODE_PRIVATE);
         etFullName.setText(prefs.getString("fullName", ""));
         etPhone.setText(prefs.getString("phone", ""));
         etEmail.setText(prefs.getString("email", ""));
@@ -133,21 +150,27 @@ public class PassengerInfoActivity extends AppCompatActivity {
         passengerDetail.setEmail(email);
         request.setPassengerDetail(passengerDetail);
 
-        Toast.makeText(PassengerInfoActivity.this, request.toString(), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "submitBooking: " + request.toString());
 
         showLoading();
 
-//        String token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0Njg3NDg1Niwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.3ldELqnSFHF9HaKoPvZHxVJ-zrt0vRQ6S3qxv0Yz7VOKXCt4qiPAEM9k9xsece2eakfcq1A3GVd6kPtq1zjpNQ";
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String jwtToken = sharedPreferences.getString("token", null);
 
         if (jwtToken == null) {
-            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class)); // Assumes LoginActivity exists
-            finish();
+            new AlertDialog.Builder(this)
+                    .setTitle("Yêu cầu đăng nhập")
+                    .setMessage(R.string.please_login)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        intent.putExtra("FROM_BOOKING", true);
+                        loginLauncher.launch(intent);
+                    })
+                    .setCancelable(false)
+                    .show();
             return;
         }
+
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<ApiResponse<Booking>> call = apiService.bookTrip("Bearer " + jwtToken, request);
         call.enqueue(new Callback<ApiResponse<Booking>>() {
@@ -163,12 +186,12 @@ public class PassengerInfoActivity extends AppCompatActivity {
                     Toast.makeText(PassengerInfoActivity.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(PassengerInfoActivity.this, TicketActivity.class);
                     intent.putExtra("BOOKING_ID", response.body().getData().getId());
-                    intent.putExtra("CITY_START",response.body().getData().getStartCity());
-                    intent.putExtra("CITY_END",response.body().getData().getEndCity());
-                    intent.putExtra("TOTAL_PRICE",response.body().getData().getTotalPrice());
-                    intent.putExtra("BOOKING_CODE",response.body().getData().getBookingCode());
-                    intent.putExtra("SEAT",String.join(", ", selectedSeatNumber));
-                    intent.putExtra("TIME",response.body().getData().getDepartureTime());
+                    intent.putExtra("CITY_START", response.body().getData().getStartCity());
+                    intent.putExtra("CITY_END", response.body().getData().getEndCity());
+                    intent.putExtra("TOTAL_PRICE", response.body().getData().getTotalPrice());
+                    intent.putExtra("BOOKING_CODE", response.body().getData().getBookingCode());
+                    intent.putExtra("SEAT", String.join(", ", selectedSeatNumber));
+                    intent.putExtra("TIME", response.body().getData().getDepartureTime());
 
                     startActivity(intent);
                     finish();
@@ -184,11 +207,6 @@ public class PassengerInfoActivity extends AppCompatActivity {
                 Toast.makeText(PassengerInfoActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String getCurrentUserId() {
-        // TODO: Implement actual user authentication (e.g., Firebase)
-        return "507f1f77bcf86cd799439011"; // Placeholder
     }
 
     private void showLoading() {
