@@ -1,6 +1,7 @@
 package com.group8.busbookingapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -137,10 +138,18 @@ public class PassengerInfoActivity extends AppCompatActivity {
 
         showLoading();
 
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0Njg3NDg1Niwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.3ldELqnSFHF9HaKoPvZHxVJ-zrt0vRQ6S3qxv0Yz7VOKXCt4qiPAEM9k9xsece2eakfcq1A3GVd6kPtq1zjpNQ";
+//        String token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkdDI1NiIsImlhdCI6MTc0Njg3NDg1Niwic3ViIjoiZGlhdGllbnNpbmhAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpZCI6IjY4MGIyOWQ0YjY0MWE4Mjk2ODExMzc2YSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.3ldELqnSFHF9HaKoPvZHxVJ-zrt0vRQ6S3qxv0Yz7VOKXCt4qiPAEM9k9xsece2eakfcq1A3GVd6kPtq1zjpNQ";
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String jwtToken = sharedPreferences.getString("token", null);
 
+        if (jwtToken == null) {
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class)); // Assumes LoginActivity exists
+            finish();
+            return;
+        }
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
-        Call<ApiResponse<Booking>> call = apiService.bookTrip("Bearer " + token, request);
+        Call<ApiResponse<Booking>> call = apiService.bookTrip("Bearer " + jwtToken, request);
         call.enqueue(new Callback<ApiResponse<Booking>>() {
             @Override
             public void onResponse(Call<ApiResponse<Booking>> call, Response<ApiResponse<Booking>> response) {
@@ -148,6 +157,7 @@ public class PassengerInfoActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: " + response);
                 Log.d(TAG, "onResponse: " + response.body());
                 Log.d(TAG, "onResponse: " + response.isSuccessful());
+                Log.d(TAG, "onResponse: " + response.body().getStatus());
 
                 if (response.isSuccessful() && response.body() != null && response.body().getStatus().equals("success")) {
                     Toast.makeText(PassengerInfoActivity.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();

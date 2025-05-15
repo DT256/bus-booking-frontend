@@ -89,8 +89,8 @@ public class SelectStopPointsActivity extends AppCompatActivity {
                 intent.putExtra("DATE_TIME", tvDateTime.getText().toString());
                 intent.putExtra("PICKUP_POINT_ID", selectedPickupPoint.getId());
                 intent.putExtra("DROPOFF_POINT_ID", selectedDropoffPoint.getId());
-                intent.putExtra("PICKUP_ADDRESS", selectedPickupPoint.getAddress());
-                intent.putExtra("DROPOFF_ADDRESS", selectedDropoffPoint.getAddress());
+                intent.putExtra("PICKUP_ADDRESS", selectedPickupPoint.getName());
+                intent.putExtra("DROPOFF_ADDRESS", selectedDropoffPoint.getName());
                 intent.putStringArrayListExtra("SELECTED_SEAT_IDS", getIntent().getStringArrayListExtra("SELECTED_SEAT_IDS"));
                 intent.putStringArrayListExtra("SELECTED_SEAT_NUMBER", getIntent().getStringArrayListExtra("SELECTED_SEAT_NUMBER"));
                 intent.putExtra("TOTAL_PRICE", getIntent().getDoubleExtra("TOTAL_PRICE", 0.0));
