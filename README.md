@@ -2,6 +2,8 @@
 
 Ứng dụng đặt vé xe khách di động được phát triển bằng Android và Java.
 
+## Design
+https://www.figma.com/design/k3NG3wjGNHnD11APItjRQK/Bus-Booking?node-id=1-2&t=YkC6E3kRwAv1RsYY-0
 ## Cấu trúc thư mục
 
 ```
